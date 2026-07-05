@@ -24,6 +24,7 @@
   "scripts": {
     "download-specs": "node download-specs.ts",
     "build": "tsup src/index.ts --format esm,cjs --dts",
+    "typecheck": "tsc --noEmit",
     "test": "node --test"
   },
   "dependencies": {
