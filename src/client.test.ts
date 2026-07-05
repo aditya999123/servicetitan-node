@@ -90,3 +90,55 @@ test("returns undefined for a 204 No Content response", async (t) => {
 
   assert.equal(result, undefined);
 });
+
+test("requestRaw resolves the raw Response without parsing the body", async (t) => {
+  t.mock.method(globalThis, "fetch", async (input: string | URL) => {
+    const url = input.toString();
+    if (url.endsWith("/connect/token")) {
+      return jsonResponse({ access_token: "test-token", expires_in: 900 });
+    }
+    return new Response("not json at all", {
+      status: 200,
+      statusText: "OK",
+      headers: { "Content-Type": "text/plain" },
+    });
+  });
+
+  const client = new ServiceTitanClient({
+    clientId: "id",
+    clientSecret: "secret",
+    appKey: "app-key",
+    environment: "integration",
+  });
+
+  const response = await client.requestRaw("/telecom/v2/tenant/123/calls/456/recording");
+  const text = await response.text();
+
+  assert.equal(text, "not json at all");
+});
+
+test("requestRaw throws ServiceTitanApiError on a non-2xx response", async (t) => {
+  t.mock.method(globalThis, "fetch", async (input: string | URL) => {
+    const url = input.toString();
+    if (url.endsWith("/connect/token")) {
+      return jsonResponse({ access_token: "test-token", expires_in: 900 });
+    }
+    return jsonResponse({ message: "not found" }, { status: 404, statusText: "Not Found" });
+  });
+
+  const client = new ServiceTitanClient({
+    clientId: "id",
+    clientSecret: "secret",
+    appKey: "app-key",
+    environment: "integration",
+  });
+
+  await assert.rejects(
+    () => client.requestRaw("/telecom/v2/tenant/123/calls/456/recording"),
+    (error: unknown) => {
+      assert.ok(error instanceof ServiceTitanApiError);
+      assert.equal((error as ServiceTitanApiError).status, 404);
+      return true;
+    },
+  );
+});

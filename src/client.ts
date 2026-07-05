@@ -28,7 +28,7 @@ export class ServiceTitanClient {
     });
   }
 
-  async request<T>(path: string, init: RequestInit = {}): Promise<T> {
+  async requestRaw(path: string, init: RequestInit = {}): Promise<Response> {
     const accessToken = await this.tokenManager.getAccessToken();
     const url = `${API_BASE_URLS[this.environment]}${path}`;
 
@@ -42,6 +42,12 @@ export class ServiceTitanClient {
       const body = await parseBody(response);
       throw new ServiceTitanApiError(response.status, response.statusText, body);
     }
+
+    return response;
+  }
+
+  async request<T>(path: string, init: RequestInit = {}): Promise<T> {
+    const response = await this.requestRaw(path, init);
 
     if (response.status === 204) {
       return undefined as T;
