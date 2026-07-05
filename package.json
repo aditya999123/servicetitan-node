@@ -43,7 +43,8 @@
     "prepare": "npm run build",
     "typecheck": "tsc --noEmit",
     "test": "node --test",
-    "refresh": "npm run download-specs && npm run generate && npm run typecheck && npm test && npm run build"
+    "refresh": "npm run download-specs && npm run generate && npm run typecheck && npm test && npm run build",
+    "test:live": "node --env-file-if-exists=.env scripts/live-check.ts"
   },
   "dependencies": {
     "yaml": "^2.5.0"
