@@ -1,7 +1,22 @@
 {
   "name": "servicetitan-node",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Unofficial Node.js/TypeScript client for the ServiceTitan API",
+  "license": "MIT",
+  "author": "Aditya Agrawal",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aditya999123/servicetitan-node.git"
+  },
+  "homepage": "https://github.com/aditya999123/servicetitan-node#readme",
+  "bugs": {
+    "url": "https://github.com/aditya999123/servicetitan-node/issues"
+  },
+  "keywords": ["servicetitan", "api", "sdk", "client"],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
