@@ -35,7 +35,11 @@ async function main(): Promise<void> {
 
   const st = new ServiceTitan({ clientId, clientSecret, appKey, environment });
 
-  const result = await st.settings.employees.getList(tenantId, { page: 1, pageSize: 1 });
+  const result = await st.settings.employees.getList(tenantId, {
+    page: 1,
+    pageSize: 1,
+    includeTotal: true,
+  });
 
   console.log("Success — authenticated and reached the real ServiceTitan API.");
   console.log(`Employees endpoint reports totalCount=${result.totalCount ?? "unknown"} for this tenant.`);
