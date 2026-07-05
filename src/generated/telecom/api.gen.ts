@@ -23,6 +23,12 @@ export function createTelecomApi(client: ServiceTitanClient) {
         body: JSON.stringify(body),
       });
     },
+    async getRecording(tenant: number, id: number): Promise<Response> {
+      return client.requestRaw(buildPath("/telecom/v2/tenant/{tenant}/calls/{id}/recording", { tenant, id }));
+    },
+    async getVoiceMail(tenant: number, id: number): Promise<Response> {
+      return client.requestRaw(buildPath("/telecom/v2/tenant/{tenant}/calls/{id}/voicemail", { tenant, id }));
+    },
     },
     callsDeprecated: {
     async getCalls(tenant: number, query?: operations["Calls_GetCalls"]["parameters"]["query"]): Promise<SuccessResponse<operations["Calls_GetCalls"]>> {

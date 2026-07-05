@@ -65,7 +65,7 @@ function collectPathParams(operation: OperationObject, pathTemplate: string): Pa
   });
 }
 
-function hasUnsupportedResponseContent(operation: OperationObject): boolean {
+function needsRawResponse(operation: OperationObject): boolean {
   const responses = operation.responses ?? {};
   const primary = responses["200"] ?? responses["201"] ?? responses["204"];
   if (!primary || !("content" in primary) || !primary.content) {
@@ -85,20 +85,11 @@ interface OperationInfo {
   hasQuery: boolean;
   queryRequired: boolean;
   hasBody: boolean;
+  isRawResponse: boolean;
 }
 
-interface SkippedOperation {
-  domain: string;
-  operationId: string;
-  reason: string;
-}
-
-function collectOperations(
-  spec: RawSpec,
-  domain: string,
-): { operations: OperationInfo[]; skipped: SkippedOperation[] } {
+function collectOperations(spec: RawSpec): OperationInfo[] {
   const operations: OperationInfo[] = [];
-  const skipped: SkippedOperation[] = [];
 
   for (const [pathTemplate, methods] of Object.entries(spec.paths)) {
     for (const httpMethod of HTTP_METHODS) {
@@ -110,15 +101,6 @@ function collectOperations(
       const tag = operation.tags?.[0];
       if (!tag) {
         throw new Error(`Operation ${operation.operationId} has no tag`);
-      }
-
-      if (hasUnsupportedResponseContent(operation)) {
-        skipped.push({
-          domain,
-          operationId: operation.operationId,
-          reason: "success response content is not exactly application/json",
-        });
-        continue;
       }
 
       const parameters = (operation.parameters ?? []) as ParameterObject[];
@@ -134,21 +116,33 @@ function collectOperations(
         hasQuery: queryParams.length > 0,
         queryRequired: queryParams.some((param) => param.required === true),
         hasBody: Boolean(operation.requestBody),
+        isRawResponse: needsRawResponse(operation),
       });
     }
   }
 
-  return { operations, skipped };
+  return operations;
 }
 
 function renderMethod(op: OperationInfo, pathPrefix: string): string {
   const fullPathTemplate = `${pathPrefix}${op.pathTemplate}`;
   const pathArgs = op.pathParams.map((param) => `${param.name}: ${param.type}`).join(", ");
   const pathObjectLiteral = `{ ${op.pathParams.map((param) => param.name).join(", ")} }`;
-  const returnType = `Promise<SuccessResponse<operations["${op.operationId}"]>>`;
   const queryType = `operations["${op.operationId}"]["parameters"]["query"]`;
-  const bodyType = `NonNullable<operations["${op.operationId}"]["requestBody"]>["content"]["application/json"]`;
   const queryArg = op.queryRequired ? `query: ${queryType}` : `query?: ${queryType}`;
+
+  if (op.isRawResponse) {
+    const args = [pathArgs, op.hasQuery ? queryArg : ""].filter(Boolean).join(", ");
+    const pathExpr = op.hasQuery
+      ? `buildPath(${JSON.stringify(fullPathTemplate)}, ${pathObjectLiteral}) + buildQueryString(query)`
+      : `buildPath(${JSON.stringify(fullPathTemplate)}, ${pathObjectLiteral})`;
+    return `    async ${op.methodName}(${args}): Promise<Response> {
+      return client.requestRaw(${pathExpr});
+    },`;
+  }
+
+  const returnType = `Promise<SuccessResponse<operations["${op.operationId}"]>>`;
+  const bodyType = `NonNullable<operations["${op.operationId}"]["requestBody"]>["content"]["application/json"]`;
 
   if (op.hasBody && op.hasQuery) {
     const args = [pathArgs, `body: ${bodyType}`, queryArg].filter(Boolean).join(", ");
@@ -254,7 +248,6 @@ async function main(): Promise<void> {
   const specsDir = new URL("../specs/", import.meta.url);
   const specFiles = (await readdir(specsDir)).filter((name) => name.endsWith(".json")).sort();
 
-  const allSkipped: SkippedOperation[] = [];
   const domains: DomainInfo[] = [];
   let totalGenerated = 0;
 
@@ -274,8 +267,7 @@ async function main(): Promise<void> {
     const typesContents = GENERATED_HEADER + astToString(ast);
     await writeFile(new URL("types.gen.ts", outDir), typesContents);
 
-    const { operations, skipped } = collectOperations(raw, slug);
-    allSkipped.push(...skipped);
+    const operations = collectOperations(raw);
 
     const apiContents = renderApiFile(operations, pathPrefix, functionName);
     await writeFile(new URL("api.gen.ts", outDir), apiContents);
@@ -288,13 +280,6 @@ async function main(): Promise<void> {
   await writeFile(new URL("../src/generated/service-titan.gen.ts", import.meta.url), facadeContents);
 
   console.log(`\nTotal: ${totalGenerated} operations across ${specFiles.length} domains.`);
-
-  if (allSkipped.length > 0) {
-    console.log(`\nSkipped ${allSkipped.length} operations:`);
-    for (const entry of allSkipped) {
-      console.log(`  ${entry.domain} ${entry.operationId}: ${entry.reason}`);
-    }
-  }
 }
 
 main().catch((error: unknown) => {
