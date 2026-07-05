@@ -40,6 +40,7 @@
     "download-specs": "node download-specs.ts",
     "generate": "node scripts/generate-api.ts",
     "build": "tsup src/index.ts --format esm,cjs --dts",
+    "prepare": "npm run build",
     "typecheck": "tsc --noEmit",
     "test": "node --test"
   },
