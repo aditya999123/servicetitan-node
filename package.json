@@ -23,6 +23,7 @@
   ],
   "scripts": {
     "download-specs": "node download-specs.ts",
+    "generate": "node scripts/generate-api.ts",
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "typecheck": "tsc --noEmit",
     "test": "node --test"
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@types/node": "^26.1.0",
+    "openapi-typescript": "^7.5.0",
     "tsup": "^8.5.0",
     "typescript": "^5.7.0"
   }
