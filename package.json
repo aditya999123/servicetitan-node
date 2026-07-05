@@ -1,0 +1,13 @@
+{
+  "name": "servicetitan-node",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "download-specs": "node download-specs.ts",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "yaml": "^2.5.0"
+  }
+}
