@@ -1,11 +1,68 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { ServiceTitanClient } from "../../client.ts";
+import { createTelecomApi } from "./api.gen.ts";
 
-test("skipped binary-response operations are not present in the generated telecom API", async () => {
-  const source = await readFile(new URL("./api.gen.ts", import.meta.url), "utf8");
+function jsonResponse(body: unknown, init: { status?: number; statusText?: string } = {}) {
+  return new Response(JSON.stringify(body), {
+    status: init.status ?? 200,
+    statusText: init.statusText ?? "OK",
+    headers: { "Content-Type": "application/json" },
+  });
+}
 
-  assert.ok(!source.includes("getRecording"), "getRecording should have been skipped");
-  assert.ok(!source.includes("getVoiceMail"), "getVoiceMail should have been skipped");
-  assert.ok(source.includes("getDetails"), "getDetails should still be generated");
+test("calls.getRecording returns the raw Response for binary audio", async (t) => {
+  const audioBytes = new Uint8Array([1, 2, 3, 4]);
+  t.mock.method(globalThis, "fetch", async (input: string | URL) => {
+    const url = input.toString();
+    if (url.endsWith("/connect/token")) {
+      return jsonResponse({ access_token: "test-token", expires_in: 900 });
+    }
+    return new Response(audioBytes, {
+      status: 200,
+      statusText: "OK",
+      headers: { "Content-Type": "application/octet-stream" },
+    });
+  });
+
+  const client = new ServiceTitanClient({
+    clientId: "id",
+    clientSecret: "secret",
+    appKey: "app-key",
+    environment: "integration",
+  });
+  const telecom = createTelecomApi(client);
+
+  const response = await telecom.calls.getRecording(123, 456);
+  const buffer = new Uint8Array(await response.arrayBuffer());
+
+  assert.deepEqual(buffer, audioBytes);
+});
+
+test("calls.getVoiceMail returns the raw Response for binary audio", async (t) => {
+  const audioBytes = new Uint8Array([5, 6, 7, 8]);
+  t.mock.method(globalThis, "fetch", async (input: string | URL) => {
+    const url = input.toString();
+    if (url.endsWith("/connect/token")) {
+      return jsonResponse({ access_token: "test-token", expires_in: 900 });
+    }
+    return new Response(audioBytes, {
+      status: 200,
+      statusText: "OK",
+      headers: { "Content-Type": "application/octet-stream" },
+    });
+  });
+
+  const client = new ServiceTitanClient({
+    clientId: "id",
+    clientSecret: "secret",
+    appKey: "app-key",
+    environment: "integration",
+  });
+  const telecom = createTelecomApi(client);
+
+  const response = await telecom.calls.getVoiceMail(123, 456);
+  const buffer = new Uint8Array(await response.arrayBuffer());
+
+  assert.deepEqual(buffer, audioBytes);
 });

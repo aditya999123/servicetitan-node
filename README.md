@@ -53,19 +53,25 @@ for how to register an app and obtain these values.
 Each domain groups its operations by resource, e.g. `st.settings.employees.getList(tenant, query?)`,
 `st.settings.employees.get(tenant, id)`, `st.settings.employees.create(tenant, body)`.
 
-### Escape hatch
+### Raw responses
 
-Three operations aren't covered by the typed methods above because they return non-JSON
-bodies (binary audio downloads, one multi-content-type endpoint) — `request()` always parses
-JSON, so generating typed wrappers for these would produce methods that fail at runtime. For
-these, or any endpoint not yet covered, use the underlying client directly:
+A few operations return non-JSON bodies (binary audio downloads, or a variable content type
+depending on the request) — these are still generated as real methods, but return the raw
+`Response` object instead of a parsed body, since parsing assumes JSON. Consume the body
+however fits:
 
 ```ts
-const raw = await st.client.request("/telecom/v2/tenant/123/calls/456/recording");
+const response = await st.telecom.calls.getRecording(123, 456);
+const audio = Buffer.from(await response.arrayBuffer());
 ```
 
-`st.client` is the same `ServiceTitanClient` instance backing every domain property, so it
-shares the same cached token.
+### Escape hatch
+
+For any endpoint not yet covered by generated code at all (e.g. a brand-new API before the
+next `npm run generate`), use the underlying client directly — `st.client.request()` for a
+JSON body, or `st.client.requestRaw()` for the raw `Response`. `st.client` is the same
+`ServiceTitanClient` instance backing every domain property, so it shares the same cached
+token.
 
 ## Development
 
