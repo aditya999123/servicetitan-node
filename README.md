@@ -1,1 +1,88 @@
 # servicetitan-node
+
+> **Unofficial.** This is a community-maintained Node.js/TypeScript client for the
+> ServiceTitan API. It is not built, endorsed, or supported by ServiceTitan, Inc.
+
+## Install
+
+```
+npm install servicetitan-node
+```
+
+## Quick start
+
+```ts
+import { ServiceTitan } from "servicetitan-node";
+
+const st = new ServiceTitan({
+  clientId: process.env.SERVICETITAN_CLIENT_ID!,
+  clientSecret: process.env.SERVICETITAN_CLIENT_SECRET!,
+  appKey: process.env.SERVICETITAN_APP_KEY!,
+  environment: "integration", // or "production"
+});
+
+const contact = await st.crm.contacts.get(123, "abc-123");
+
+const employees = await st.settings.employees.getList(123, { page: 1, pageSize: 50 });
+```
+
+## Authentication
+
+ServiceTitan's API uses OAuth 2.0 **client credentials** grant only (no per-user login).
+`ServiceTitan` handles fetching and caching access tokens for you — tokens are cached and
+automatically refreshed a safety margin before their 15-minute expiry, and concurrent calls
+during a refresh share a single token request instead of firing duplicates. You provide:
+
+- `clientId` / `clientSecret` — your registered application's credentials.
+- `appKey` — sent as the `ST-App-Key` header on every request.
+- `environment` — `"integration"` or `"production"` (defaults to `"production"`), each with
+  its own auth and API endpoints.
+
+See ServiceTitan's own [Getting Started docs](https://developer.servicetitan.io/docs/getting-started/oauth20)
+for how to register an app and obtain these values.
+
+## Supported domains
+
+`ServiceTitan` exposes all 24 ServiceTitan API domains as properties:
+
+`accounting`, `crm`, `customerInteractions`, `dispatch`, `equipmentSystems`, `findings`,
+`forms`, `inventory`, `jbce`, `jpm`, `marketing`, `marketingAds`, `marketingReputation`,
+`memberships`, `payroll`, `pricebook`, `reporting`, `salestech`, `schedulingPro`,
+`serviceAgreements`, `settings`, `taskManagement`, `telecom`, `timesheets`.
+
+Each domain groups its operations by resource, e.g. `st.settings.employees.getList(tenant, query?)`,
+`st.settings.employees.get(tenant, id)`, `st.settings.employees.create(tenant, body)`.
+
+### Escape hatch
+
+Three operations aren't covered by the typed methods above because they return non-JSON
+bodies (binary audio downloads, one multi-content-type endpoint) — `request()` always parses
+JSON, so generating typed wrappers for these would produce methods that fail at runtime. For
+these, or any endpoint not yet covered, use the underlying client directly:
+
+```ts
+const raw = await st.client.request("/telecom/v2/tenant/123/calls/456/recording");
+```
+
+`st.client` is the same `ServiceTitanClient` instance backing every domain property, so it
+shares the same cached token.
+
+## Development
+
+Requires Node 24+ (the codebase runs TypeScript natively — no build step for tests).
+
+```
+npm test          # run all tests
+npm run typecheck # tsc --noEmit across the whole project
+npm run build     # bundle src/index.ts to dist/ (tsup, ESM + CJS + .d.ts)
+npm run generate  # regenerate src/generated/ from specs/*.json
+```
+
+The OpenAPI specs under `specs/` are fetched from ServiceTitan's developer portal via
+`npm run download-specs`; `npm run generate` turns them into the typed methods under
+`src/generated/`. Generated files are committed to the repo and should never be edited by
+hand — re-run the generator instead.
+
+## License
+
+MIT
