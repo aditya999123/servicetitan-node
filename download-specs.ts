@@ -25,6 +25,28 @@ export function formatApiLine(api: ApiSummary): string {
 
 const CATALOG_URL = "https://developer.servicetitan.io/api/docs/apis";
 
+export function apiDocumentUrl(id: string): string {
+  return `${CATALOG_URL}/${id}`;
+}
+
+export interface DownloadResult {
+  id: string;
+  success: boolean;
+  error?: string;
+}
+
+export function summarizeDownloads(results: DownloadResult[], outputDir: string): string {
+  const succeeded = results.filter((result) => result.success).length;
+  const failed = results.filter((result) => !result.success);
+  const base = `Downloaded ${succeeded}/${results.length} specs to ${outputDir}/.`;
+
+  if (failed.length === 0) {
+    return base;
+  }
+
+  return `${base} Failed: ${failed.map((result) => result.id).join(", ")}.`;
+}
+
 async function fetchCatalog(): Promise<CatalogGroup[]> {
   const response = await fetch(CATALOG_URL, {
     headers: { Accept: "application/json" },

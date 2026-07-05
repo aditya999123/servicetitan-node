@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { flattenCatalog, formatApiLine } from "./download-specs.ts";
+import { apiDocumentUrl, summarizeDownloads } from "./download-specs.ts";
 
 test("flattenCatalog flattens apis across groups", () => {
   const groups = [
@@ -51,4 +52,36 @@ test("formatApiLine omits the flags block when neither flag is set", () => {
   });
 
   assert.equal(line, "y-1 — Y: d");
+});
+
+test("apiDocumentUrl builds the per-API document URL", () => {
+  assert.equal(
+    apiDocumentUrl("tenant-crm-v2"),
+    "https://developer.servicetitan.io/api/docs/apis/tenant-crm-v2",
+  );
+});
+
+test("summarizeDownloads reports full success", () => {
+  const summary = summarizeDownloads(
+    [
+      { id: "a", success: true },
+      { id: "b", success: true },
+    ],
+    "specs",
+  );
+
+  assert.equal(summary, "Downloaded 2/2 specs to specs/.");
+});
+
+test("summarizeDownloads lists failed ids", () => {
+  const summary = summarizeDownloads(
+    [
+      { id: "a", success: true },
+      { id: "b", success: false, error: "500 Internal Server Error" },
+      { id: "c", success: false, error: "network error" },
+    ],
+    "specs",
+  );
+
+  assert.equal(summary, "Downloaded 1/3 specs to specs/. Failed: b, c.");
 });
