@@ -91,11 +91,15 @@ function lowerFirst(value: string): string {
   return value.charAt(0).toLowerCase() + value.slice(1);
 }
 
+function sanitizeIdentifier(value: string): string {
+  return value.replace(/[^a-zA-Z0-9]/g, "");
+}
+
 function actionName(operationId: string): string {
   const action = operationId.includes("_")
     ? operationId.slice(operationId.indexOf("_") + 1)
     : operationId;
-  return lowerFirst(action);
+  return lowerFirst(sanitizeIdentifier(action));
 }
 
 function domainSlug(specFileName: string): string {
@@ -188,7 +192,7 @@ function collectOperations(
       const queryParams = parameters.filter((param) => param.in === "query");
 
       operations.push({
-        tag: lowerFirst(tag),
+        tag: lowerFirst(sanitizeIdentifier(tag)),
         methodName: actionName(operation.operationId),
         operationId: operation.operationId,
         httpMethod,

@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import openapiTS, { astToString } from "openapi-typescript";
 import type { OperationObject, ParameterObject } from "openapi-typescript";
 
@@ -20,15 +20,55 @@ function lowerFirst(value: string): string {
   return value.charAt(0).toLowerCase() + value.slice(1);
 }
 
+function sanitizeIdentifier(value: string): string {
+  return value.replace(/[^a-zA-Z0-9]/g, "");
+}
+
 function actionName(operationId: string): string {
   const action = operationId.includes("_")
     ? operationId.slice(operationId.indexOf("_") + 1)
     : operationId;
-  return lowerFirst(action);
+  return lowerFirst(sanitizeIdentifier(action));
 }
 
-function pathParamsInOrder(path: string): string[] {
+function domainSlug(specFileName: string): string {
+  return specFileName.replace(/^tenant-/, "").replace(/(-v\d+)?\.json$/, "");
+}
+
+function pascalCase(slug: string): string {
+  return slug
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+}
+
+function pathParamNamesInOrder(path: string): string[] {
   return Array.from(path.matchAll(/\{(\w+)\}/g), (match) => match[1]);
+}
+
+interface PathParam {
+  name: string;
+  type: "number" | "string";
+}
+
+function collectPathParams(operation: OperationObject, pathTemplate: string): PathParam[] {
+  const names = pathParamNamesInOrder(pathTemplate);
+  const parameters = (operation.parameters ?? []) as ParameterObject[];
+  return names.map((name) => {
+    const param = parameters.find((p) => p.in === "path" && p.name === name);
+    const type: PathParam["type"] = param?.schema?.type === "string" ? "string" : "number";
+    return { name, type };
+  });
+}
+
+function hasUnsupportedResponseContent(operation: OperationObject): boolean {
+  const responses = operation.responses ?? {};
+  const primary = responses["200"] ?? responses["201"] ?? responses["204"];
+  if (!primary || !("content" in primary) || !primary.content) {
+    return false;
+  }
+  const contentTypes = Object.keys(primary.content);
+  return !(contentTypes.length === 1 && contentTypes[0] === "application/json");
 }
 
 interface OperationInfo {
@@ -37,14 +77,24 @@ interface OperationInfo {
   operationId: string;
   httpMethod: (typeof HTTP_METHODS)[number];
   pathTemplate: string;
-  pathParams: string[];
+  pathParams: PathParam[];
   hasQuery: boolean;
   queryRequired: boolean;
   hasBody: boolean;
 }
 
-function collectOperations(spec: RawSpec): OperationInfo[] {
+interface SkippedOperation {
+  domain: string;
+  operationId: string;
+  reason: string;
+}
+
+function collectOperations(
+  spec: RawSpec,
+  domain: string,
+): { operations: OperationInfo[]; skipped: SkippedOperation[] } {
   const operations: OperationInfo[] = [];
+  const skipped: SkippedOperation[] = [];
 
   for (const [pathTemplate, methods] of Object.entries(spec.paths)) {
     for (const httpMethod of HTTP_METHODS) {
@@ -58,43 +108,57 @@ function collectOperations(spec: RawSpec): OperationInfo[] {
         throw new Error(`Operation ${operation.operationId} has no tag`);
       }
 
-      const parameters = (operation.parameters ?? []) as ParameterObject[];
-      const queryParams = parameters.filter((param) => param.in === "query");
-      const hasQuery = queryParams.length > 0;
-      const hasBody = Boolean(operation.requestBody);
-
-      if (hasQuery && hasBody) {
-        throw new Error(
-          `Operation ${operation.operationId} has both query parameters and a request ` +
-            "body, which this generator does not support yet",
-        );
+      if (hasUnsupportedResponseContent(operation)) {
+        skipped.push({
+          domain,
+          operationId: operation.operationId,
+          reason: "success response content is not exactly application/json",
+        });
+        continue;
       }
 
+      const parameters = (operation.parameters ?? []) as ParameterObject[];
+      const queryParams = parameters.filter((param) => param.in === "query");
+
       operations.push({
-        tag: lowerFirst(tag),
+        tag: lowerFirst(sanitizeIdentifier(tag)),
         methodName: actionName(operation.operationId),
         operationId: operation.operationId,
         httpMethod,
         pathTemplate,
-        pathParams: pathParamsInOrder(pathTemplate),
-        hasQuery,
+        pathParams: collectPathParams(operation, pathTemplate),
+        hasQuery: queryParams.length > 0,
         queryRequired: queryParams.some((param) => param.required === true),
-        hasBody,
+        hasBody: Boolean(operation.requestBody),
       });
     }
   }
 
-  return operations;
+  return { operations, skipped };
 }
 
 function renderMethod(op: OperationInfo, pathPrefix: string): string {
   const fullPathTemplate = `${pathPrefix}${op.pathTemplate}`;
-  const pathArgs = op.pathParams.map((param) => `${param}: number`).join(", ");
-  const pathObjectLiteral = `{ ${op.pathParams.join(", ")} }`;
+  const pathArgs = op.pathParams.map((param) => `${param.name}: ${param.type}`).join(", ");
+  const pathObjectLiteral = `{ ${op.pathParams.map((param) => param.name).join(", ")} }`;
   const returnType = `Promise<SuccessResponse<operations["${op.operationId}"]>>`;
+  const queryType = `operations["${op.operationId}"]["parameters"]["query"]`;
+  const bodyType = `NonNullable<operations["${op.operationId}"]["requestBody"]>["content"]["application/json"]`;
+  const queryArg = op.queryRequired ? `query: ${queryType}` : `query?: ${queryType}`;
+
+  if (op.hasBody && op.hasQuery) {
+    const args = [pathArgs, `body: ${bodyType}`, queryArg].filter(Boolean).join(", ");
+    return `    async ${op.methodName}(${args}): ${returnType} {
+      const path = buildPath(${JSON.stringify(fullPathTemplate)}, ${pathObjectLiteral});
+      return client.request(path + buildQueryString(query), {
+        method: ${JSON.stringify(op.httpMethod.toUpperCase())},
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    },`;
+  }
 
   if (op.hasBody) {
-    const bodyType = `NonNullable<operations["${op.operationId}"]["requestBody"]>["content"]["application/json"]`;
     const args = [pathArgs, `body: ${bodyType}`].filter(Boolean).join(", ");
     return `    async ${op.methodName}(${args}): ${returnType} {
       const path = buildPath(${JSON.stringify(fullPathTemplate)}, ${pathObjectLiteral});
@@ -107,8 +171,6 @@ function renderMethod(op: OperationInfo, pathPrefix: string): string {
   }
 
   if (op.hasQuery) {
-    const queryType = `operations["${op.operationId}"]["parameters"]["query"]`;
-    const queryArg = op.queryRequired ? `query: ${queryType}` : `query?: ${queryType}`;
     const args = [pathArgs, queryArg].filter(Boolean).join(", ");
     return `    async ${op.methodName}(${args}): ${returnType} {
       const path = buildPath(${JSON.stringify(fullPathTemplate)}, ${pathObjectLiteral});
@@ -124,7 +186,7 @@ function renderMethod(op: OperationInfo, pathPrefix: string): string {
     },`;
 }
 
-function renderApiFile(operations: OperationInfo[], pathPrefix: string): string {
+function renderApiFile(operations: OperationInfo[], pathPrefix: string, functionName: string): string {
   const byTag = new Map<string, OperationInfo[]>();
   for (const op of operations) {
     const list = byTag.get(op.tag) ?? [];
@@ -143,7 +205,7 @@ function renderApiFile(operations: OperationInfo[], pathPrefix: string): string 
 import type { operations } from "./types.gen.ts";
 import { buildPath, buildQueryString, type SuccessResponse } from "../shared.ts";
 
-export function createSettingsApi(client: ServiceTitanClient) {
+export function ${functionName}(client: ServiceTitanClient) {
   return {
 ${tagBlocks}
   };
@@ -152,23 +214,44 @@ ${tagBlocks}
 }
 
 async function main(): Promise<void> {
-  const specUrl = new URL("../specs/tenant-settings-v2.json", import.meta.url);
-  const raw = JSON.parse(await readFile(specUrl, "utf8")) as RawSpec;
-  const pathPrefix = extractPathPrefix(raw.servers[0].url);
+  const specsDir = new URL("../specs/", import.meta.url);
+  const specFiles = (await readdir(specsDir)).filter((name) => name.endsWith(".json")).sort();
 
-  const outDir = new URL("../src/generated/settings/", import.meta.url);
-  await mkdir(outDir, { recursive: true });
+  const allSkipped: SkippedOperation[] = [];
+  let totalGenerated = 0;
 
-  const ast = await openapiTS(specUrl);
-  const typesContents = GENERATED_HEADER + astToString(ast);
-  await writeFile(new URL("types.gen.ts", outDir), typesContents);
+  for (const specFile of specFiles) {
+    const slug = domainSlug(specFile);
+    const functionName = `create${pascalCase(slug)}Api`;
+    const specUrl = new URL(specFile, specsDir);
+    const raw = JSON.parse(await readFile(specUrl, "utf8")) as RawSpec;
+    const pathPrefix = extractPathPrefix(raw.servers[0].url);
 
-  const operations = collectOperations(raw);
-  const apiContents = renderApiFile(operations, pathPrefix);
-  await writeFile(new URL("api.gen.ts", outDir), apiContents);
+    const outDir = new URL(`../src/generated/${slug}/`, import.meta.url);
+    await mkdir(outDir, { recursive: true });
 
-  const tagCount = new Set(operations.map((op) => op.tag)).size;
-  console.log(`Generated ${operations.length} operations across ${tagCount} tags.`);
+    const ast = await openapiTS(specUrl);
+    const typesContents = GENERATED_HEADER + astToString(ast);
+    await writeFile(new URL("types.gen.ts", outDir), typesContents);
+
+    const { operations, skipped } = collectOperations(raw, slug);
+    allSkipped.push(...skipped);
+
+    const apiContents = renderApiFile(operations, pathPrefix, functionName);
+    await writeFile(new URL("api.gen.ts", outDir), apiContents);
+
+    totalGenerated += operations.length;
+    console.log(`${slug}: generated ${operations.length} operations`);
+  }
+
+  console.log(`\nTotal: ${totalGenerated} operations across ${specFiles.length} domains.`);
+
+  if (allSkipped.length > 0) {
+    console.log(`\nSkipped ${allSkipped.length} operations:`);
+    for (const entry of allSkipped) {
+      console.log(`  ${entry.domain} ${entry.operationId}: ${entry.reason}`);
+    }
+  }
 }
 
 main().catch((error: unknown) => {
