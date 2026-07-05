@@ -42,6 +42,10 @@ function pascalCase(slug: string): string {
     .join("");
 }
 
+function camelCase(slug: string): string {
+  return lowerFirst(pascalCase(slug));
+}
+
 function pathParamNamesInOrder(path: string): string[] {
   return Array.from(path.matchAll(/\{(\w+)\}/g), (match) => match[1]);
 }
@@ -213,16 +217,52 @@ ${tagBlocks}
 `;
 }
 
+interface DomainInfo {
+  slug: string;
+  functionName: string;
+}
+
+function renderServiceTitanFacade(domains: DomainInfo[]): string {
+  const imports = domains
+    .map((d) => `import { ${d.functionName} } from "./${d.slug}/api.gen.ts";`)
+    .join("\n");
+
+  const properties = domains
+    .map((d) => `  readonly ${camelCase(d.slug)}: ReturnType<typeof ${d.functionName}>;`)
+    .join("\n");
+
+  const assignments = domains
+    .map((d) => `    this.${camelCase(d.slug)} = ${d.functionName}(this.client);`)
+    .join("\n");
+
+  return `${GENERATED_HEADER}import { ServiceTitanClient, type ServiceTitanClientOptions } from "../client.ts";
+${imports}
+
+export class ServiceTitan {
+  readonly client: ServiceTitanClient;
+${properties}
+
+  constructor(options: ServiceTitanClientOptions) {
+    this.client = new ServiceTitanClient(options);
+${assignments}
+  }
+}
+`;
+}
+
 async function main(): Promise<void> {
   const specsDir = new URL("../specs/", import.meta.url);
   const specFiles = (await readdir(specsDir)).filter((name) => name.endsWith(".json")).sort();
 
   const allSkipped: SkippedOperation[] = [];
+  const domains: DomainInfo[] = [];
   let totalGenerated = 0;
 
   for (const specFile of specFiles) {
     const slug = domainSlug(specFile);
     const functionName = `create${pascalCase(slug)}Api`;
+    domains.push({ slug, functionName });
+
     const specUrl = new URL(specFile, specsDir);
     const raw = JSON.parse(await readFile(specUrl, "utf8")) as RawSpec;
     const pathPrefix = extractPathPrefix(raw.servers[0].url);
@@ -243,6 +283,9 @@ async function main(): Promise<void> {
     totalGenerated += operations.length;
     console.log(`${slug}: generated ${operations.length} operations`);
   }
+
+  const facadeContents = renderServiceTitanFacade(domains);
+  await writeFile(new URL("../src/generated/service-titan.gen.ts", import.meta.url), facadeContents);
 
   console.log(`\nTotal: ${totalGenerated} operations across ${specFiles.length} domains.`);
 
