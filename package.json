@@ -9,5 +9,8 @@
   },
   "dependencies": {
     "yaml": "^2.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0"
   }
 }
