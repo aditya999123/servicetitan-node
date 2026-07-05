@@ -1,3 +1,6 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+
 export interface ApiSummary {
   id: string;
   displayName: string;
@@ -61,6 +64,20 @@ async function fetchCatalog(): Promise<CatalogGroup[]> {
   return (await response.json()) as CatalogGroup[];
 }
 
+async function downloadApiDocument(id: string, outputDir: string): Promise<void> {
+  const url = apiDocumentUrl(id);
+  const response = await fetch(url, {
+    headers: { Accept: "application/json" },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${id}: ${response.status} ${response.statusText}`);
+  }
+
+  const document = await response.json();
+  await writeFile(join(outputDir, `${id}.json`), JSON.stringify(document, null, 2));
+}
+
 async function main(): Promise<void> {
   const groups = await fetchCatalog();
   const apis = flattenCatalog(groups);
@@ -68,8 +85,28 @@ async function main(): Promise<void> {
   for (const api of apis) {
     console.log(formatApiLine(api));
   }
+  console.log(`\nFound ${apis.length} OpenAPI specs.\n`);
 
-  console.log(`\nFound ${apis.length} OpenAPI specs.`);
+  const outputDir = "specs";
+  await mkdir(outputDir, { recursive: true });
+
+  const results: DownloadResult[] = [];
+  for (const api of apis) {
+    try {
+      await downloadApiDocument(api.id, outputDir);
+      results.push({ id: api.id, success: true });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(`Failed to download ${api.id}: ${message}`);
+      results.push({ id: api.id, success: false, error: message });
+    }
+  }
+
+  console.log(summarizeDownloads(results, outputDir));
+
+  if (results.some((result) => !result.success)) {
+    process.exitCode = 1;
+  }
 }
 
 const isMainModule = import.meta.url === `file://${process.argv[1]}`;
