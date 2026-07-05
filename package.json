@@ -42,7 +42,8 @@
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "prepare": "npm run build",
     "typecheck": "tsc --noEmit",
-    "test": "node --test"
+    "test": "node --test",
+    "refresh": "npm run download-specs && npm run generate && npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
     "yaml": "^2.5.0"
