@@ -105,7 +105,7 @@ async function main(): Promise<void> {
   }
 
   const employee = await st.settings.employees.get(tenantId, first.id);
-  console.log(`\nFetched employee ${employee.id} individually: ${employee.name} <${employee.email ?? "no email on file"}>`);
+  console.log(`\nFetched employee ${employee.id} individually: ${employee.name} <${employee.email || "no email on file"}>`);
 }
 
 main().catch((error: unknown) => {
