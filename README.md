@@ -26,6 +26,24 @@ const contact = await st.crm.contacts.get(123, "abc-123");
 const employees = await st.settings.employees.getList(123, { page: 1, pageSize: 50 });
 ```
 
+## Examples
+
+Runnable examples live under `examples/`, using the same `.env` credentials as
+`npm run test:live`:
+
+```
+node --env-file-if-exists=.env examples/<name>.ts
+```
+
+- `list-and-get-employees.ts` — list employees, then fetch one individually by id.
+- `paginate-all-employees.ts` — loop through every page of a list endpoint.
+- `create-and-update-tag-type.ts` — create then update a resource. Mutates real data —
+  refuses to run against production unless `SERVICETITAN_ALLOW_PRODUCTION_WRITES=true` is
+  also set.
+- `download-call-recording.ts` — consume a raw-response method, saving binary audio to a
+  file. Requires `SERVICETITAN_EXAMPLE_CALL_ID` (a real call id with a recording).
+- `handle-not-found-error.ts` — catch `ServiceTitanApiError` and branch on `.status`.
+
 ## Authentication
 
 ServiceTitan's API uses OAuth 2.0 **client credentials** grant only (no per-user login).
