@@ -18,17 +18,13 @@ const st = new ServiceTitan({
   clientId: process.env.SERVICETITAN_CLIENT_ID!,
   clientSecret: process.env.SERVICETITAN_CLIENT_SECRET!,
   appKey: process.env.SERVICETITAN_APP_KEY!,
+  tenantId: Number(process.env.SERVICETITAN_TENANT_ID),
   environment: "integration", // or "production"
 });
 
-// Tenant ID isn't part of the client config above — it's passed as the first argument to
-// every call instead, since one app can serve multiple ServiceTitan tenants. See
-// "Tenant ID" under Authentication below.
-const tenantId = Number(process.env.SERVICETITAN_TENANT_ID);
+const contact = await st.crm.contacts.get("abc-123");
 
-const contact = await st.crm.contacts.get(tenantId, "abc-123");
-
-const employees = await st.settings.employees.getList(tenantId, { page: 1, pageSize: 50 });
+const employees = await st.settings.employees.getList({ page: 1, pageSize: 50 });
 ```
 
 ## Examples
@@ -66,12 +62,10 @@ for how to register an app and obtain these values.
 
 ### Tenant ID
 
-Notably absent from the config above: **tenant ID isn't a client-level setting.** A single
-registered app can serve multiple ServiceTitan tenants (customer accounts), so tenant ID is
-instead the first argument to nearly every method, e.g.
-`st.crm.contacts.get(tenantId, "abc-123")`. You'll find it in the ServiceTitan UI (or wherever
-your integration's tenant list is managed) — it's a numeric id, not something the SDK can
-infer or default.
+`tenantId` is required when constructing `ServiceTitan` — a single instance always talks to
+one tenant, and every generated method uses it automatically. You'll find your tenant ID in
+the ServiceTitan UI (or wherever your integration's tenant list is managed); it's a numeric
+id, not something the SDK can infer or default.
 
 ## Supported domains
 
@@ -82,8 +76,8 @@ infer or default.
 `memberships`, `payroll`, `pricebook`, `reporting`, `salestech`, `schedulingPro`,
 `serviceAgreements`, `settings`, `taskManagement`, `telecom`, `timesheets`.
 
-Each domain groups its operations by resource, e.g. `st.settings.employees.getList(tenant, query?)`,
-`st.settings.employees.get(tenant, id)`, `st.settings.employees.create(tenant, body)`.
+Each domain groups its operations by resource, e.g. `st.settings.employees.getList(query?)`,
+`st.settings.employees.get(id)`, `st.settings.employees.create(body)`.
 
 ### Raw responses
 
@@ -93,7 +87,7 @@ depending on the request) — these are still generated as real methods, but ret
 however fits:
 
 ```ts
-const response = await st.telecom.calls.getRecording(123, 456);
+const response = await st.telecom.calls.getRecording(456);
 const audio = Buffer.from(await response.arrayBuffer());
 ```
 
