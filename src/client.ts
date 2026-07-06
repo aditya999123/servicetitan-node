@@ -10,15 +10,18 @@ export interface ServiceTitanClientOptions {
   clientId: string;
   clientSecret: string;
   appKey: string;
+  tenantId: number;
   environment?: Environment;
 }
 
 export class ServiceTitanClient {
+  readonly tenantId: number;
   private readonly appKey: string;
   private readonly environment: Environment;
   private readonly tokenManager: TokenManager;
 
   constructor(options: ServiceTitanClientOptions) {
+    this.tenantId = options.tenantId;
     this.appKey = options.appKey;
     this.environment = options.environment ?? "production";
     this.tokenManager = createTokenManager({

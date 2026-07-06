@@ -26,11 +26,12 @@ test("contacts.get accepts a string id and builds the correct URL", async (t) =>
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
   const crm = createCrmApi(client);
 
-  const result = await crm.contacts.get(123, "abc-123");
+  const result = await crm.contacts.get("abc-123");
 
   assert.equal(calls.length, 1);
   assert.equal(

@@ -7,8 +7,8 @@ import { buildPath, buildQueryString, type SuccessResponse } from "../shared.ts"
 export function createMarketingReputationApi(client: ServiceTitanClient) {
   return {
     reviews: {
-    async reviews(tenant: string, query?: operations["reviews"]["parameters"]["query"]): Promise<Response> {
-      return client.requestRaw(buildPath("/marketingreputation/v2/tenant/{tenant}/reviews", { tenant }) + buildQueryString(query));
+    async reviews(query?: operations["reviews"]["parameters"]["query"]): Promise<Response> {
+      return client.requestRaw(buildPath("/marketingreputation/v2/tenant/{tenant}/reviews", { tenant: client.tenantId }) + buildQueryString(query));
     },
     },
   };

@@ -26,12 +26,12 @@ test("receipts.cancelReceipts sends both a query string and a JSON body", async 
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
   const inventory = createInventoryApi(client);
 
   const result = await inventory.receipts.cancelReceipts(
-    123,
     456,
     { canceledReason: { id: 1 } } as never,
     { id: 456 },

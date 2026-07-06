@@ -7,64 +7,64 @@ import { buildPath, buildQueryString, type SuccessResponse } from "../shared.ts"
 export function createJpmApi(client: ServiceTitanClient) {
   return {
     appointments: {
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["Appointments_Get"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["Appointments_Get"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async delete(tenant: number, id: number): Promise<SuccessResponse<operations["Appointments_Delete"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}", { tenant, id });
+    async delete(id: number): Promise<SuccessResponse<operations["Appointments_Delete"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}", { tenant: client.tenantId, id });
       return client.request(path, { method: "DELETE" });
     },
-    async getList(tenant: number, query?: operations["Appointments_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Appointments_GetList"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments", { tenant });
+    async getList(query?: operations["Appointments_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Appointments_GetList"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async add(tenant: number, body: NonNullable<operations["Appointments_Add"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_Add"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments", { tenant });
+    async add(body: NonNullable<operations["Appointments_Add"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_Add"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async reschedule(tenant: number, id: number, body: NonNullable<operations["Appointments_Reschedule"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_Reschedule"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/reschedule", { tenant, id });
+    async reschedule(id: number, body: NonNullable<operations["Appointments_Reschedule"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_Reschedule"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/reschedule", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async hold(tenant: number, id: number, body: NonNullable<operations["Appointments_Hold"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_Hold"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/hold", { tenant, id });
+    async hold(id: number, body: NonNullable<operations["Appointments_Hold"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_Hold"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/hold", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async removeHold(tenant: number, id: number): Promise<SuccessResponse<operations["Appointments_RemoveHold"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/hold", { tenant, id });
+    async removeHold(id: number): Promise<SuccessResponse<operations["Appointments_RemoveHold"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/hold", { tenant: client.tenantId, id });
       return client.request(path, { method: "DELETE" });
     },
-    async updateSpecialInstructions(tenant: number, id: number, body: NonNullable<operations["Appointments_UpdateSpecialInstructions"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_UpdateSpecialInstructions"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/special-instructions", { tenant, id });
+    async updateSpecialInstructions(id: number, body: NonNullable<operations["Appointments_UpdateSpecialInstructions"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_UpdateSpecialInstructions"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/special-instructions", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async confirm(tenant: number, id: number): Promise<SuccessResponse<operations["Appointments_Confirm"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/confirmation", { tenant, id });
+    async confirm(id: number): Promise<SuccessResponse<operations["Appointments_Confirm"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/confirmation", { tenant: client.tenantId, id });
       return client.request(path, { method: "PUT" });
     },
-    async removeConfirmation(tenant: number, id: number): Promise<SuccessResponse<operations["Appointments_RemoveConfirmation"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/confirmation", { tenant, id });
+    async removeConfirmation(id: number): Promise<SuccessResponse<operations["Appointments_RemoveConfirmation"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/confirmation", { tenant: client.tenantId, id });
       return client.request(path, { method: "DELETE" });
     },
-    async setSummary(tenant: number, id: number, body: NonNullable<operations["Appointments_SetSummary"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_SetSummary"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/summaries", { tenant, id });
+    async setSummary(id: number, body: NonNullable<operations["Appointments_SetSummary"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Appointments_SetSummary"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/appointments/{id}/summaries", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -73,232 +73,232 @@ export function createJpmApi(client: ServiceTitanClient) {
     },
     },
     budgetCodes: {
-    async listCompanySegments(tenant: number, query?: operations["BudgetCodes_ListCompanySegments"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListCompanySegments"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/segments", { tenant });
+    async listCompanySegments(query?: operations["BudgetCodes_ListCompanySegments"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListCompanySegments"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/segments", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async listProjectSegments(tenant: number, projectId: number, query?: operations["BudgetCodes_ListProjectSegments"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListProjectSegments"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/segments", { tenant, projectId });
+    async listProjectSegments(projectId: number, query?: operations["BudgetCodes_ListProjectSegments"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListProjectSegments"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/segments", { tenant: client.tenantId, projectId });
       return client.request(path + buildQueryString(query));
     },
-    async listCompanySegmentItems(tenant: number, segmentId: number, query?: operations["BudgetCodes_ListCompanySegmentItems"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListCompanySegmentItems"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/segments/{segmentId}/items", { tenant, segmentId });
+    async listCompanySegmentItems(segmentId: number, query?: operations["BudgetCodes_ListCompanySegmentItems"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListCompanySegmentItems"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/segments/{segmentId}/items", { tenant: client.tenantId, segmentId });
       return client.request(path + buildQueryString(query));
     },
-    async listProjectSegmentItems(tenant: number, projectId: number, segmentId: number, query?: operations["BudgetCodes_ListProjectSegmentItems"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListProjectSegmentItems"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/segments/{segmentId}/items", { tenant, projectId, segmentId });
+    async listProjectSegmentItems(projectId: number, segmentId: number, query?: operations["BudgetCodes_ListProjectSegmentItems"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListProjectSegmentItems"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/segments/{segmentId}/items", { tenant: client.tenantId, projectId, segmentId });
       return client.request(path + buildQueryString(query));
     },
-    async listCompanySegmentItemChildren(tenant: number, segmentId: number, segmentItemId: number, query?: operations["BudgetCodes_ListCompanySegmentItemChildren"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListCompanySegmentItemChildren"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/segments/{segmentId}/items/{segmentItemId}/children", { tenant, segmentId, segmentItemId });
+    async listCompanySegmentItemChildren(segmentId: number, segmentItemId: number, query?: operations["BudgetCodes_ListCompanySegmentItemChildren"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListCompanySegmentItemChildren"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/segments/{segmentId}/items/{segmentItemId}/children", { tenant: client.tenantId, segmentId, segmentItemId });
       return client.request(path + buildQueryString(query));
     },
-    async listProjectSegmentItemChildren(tenant: number, projectId: number, segmentId: number, segmentItemId: number, query?: operations["BudgetCodes_ListProjectSegmentItemChildren"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListProjectSegmentItemChildren"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/segments/{segmentId}/items/{segmentItemId}/children", { tenant, projectId, segmentId, segmentItemId });
+    async listProjectSegmentItemChildren(projectId: number, segmentId: number, segmentItemId: number, query?: operations["BudgetCodes_ListProjectSegmentItemChildren"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListProjectSegmentItemChildren"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/segments/{segmentId}/items/{segmentItemId}/children", { tenant: client.tenantId, projectId, segmentId, segmentItemId });
       return client.request(path + buildQueryString(query));
     },
-    async listCompanyBudgetCodes(tenant: number, query?: operations["BudgetCodes_ListCompanyBudgetCodes"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListCompanyBudgetCodes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes", { tenant });
+    async listCompanyBudgetCodes(query?: operations["BudgetCodes_ListCompanyBudgetCodes"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListCompanyBudgetCodes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async createBudgetCode(tenant: number, body: NonNullable<operations["BudgetCodes_CreateBudgetCode"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BudgetCodes_CreateBudgetCode"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes", { tenant });
+    async createBudgetCode(body: NonNullable<operations["BudgetCodes_CreateBudgetCode"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BudgetCodes_CreateBudgetCode"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async listProjectBudgetCodes(tenant: number, projectId: number, query?: operations["BudgetCodes_ListProjectBudgetCodes"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListProjectBudgetCodes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/budget-codes", { tenant, projectId });
+    async listProjectBudgetCodes(projectId: number, query?: operations["BudgetCodes_ListProjectBudgetCodes"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_ListProjectBudgetCodes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/budget-codes", { tenant: client.tenantId, projectId });
       return client.request(path + buildQueryString(query));
     },
-    async matchCompanyBudgetCodes(tenant: number, query: operations["BudgetCodes_MatchCompanyBudgetCodes"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_MatchCompanyBudgetCodes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes/match", { tenant });
+    async matchCompanyBudgetCodes(query: operations["BudgetCodes_MatchCompanyBudgetCodes"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_MatchCompanyBudgetCodes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes/match", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async matchProjectBudgetCodes(tenant: number, projectId: number, query: operations["BudgetCodes_MatchProjectBudgetCodes"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_MatchProjectBudgetCodes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/budget-codes/match", { tenant, projectId });
+    async matchProjectBudgetCodes(projectId: number, query: operations["BudgetCodes_MatchProjectBudgetCodes"]["parameters"]["query"]): Promise<SuccessResponse<operations["BudgetCodes_MatchProjectBudgetCodes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/projects/{projectId}/budget-codes/match", { tenant: client.tenantId, projectId });
       return client.request(path + buildQueryString(query));
     },
-    async createBudgetCodePartial(tenant: number, body: NonNullable<operations["BudgetCodes_CreateBudgetCodePartial"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BudgetCodes_CreateBudgetCodePartial"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes/partial", { tenant });
+    async createBudgetCodePartial(body: NonNullable<operations["BudgetCodes_CreateBudgetCodePartial"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BudgetCodes_CreateBudgetCodePartial"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes/partial", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async createBudgetCodesBatch(tenant: number): Promise<SuccessResponse<operations["BudgetCodes_CreateBudgetCodesBatch"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes/batch", { tenant });
+    async createBudgetCodesBatch(): Promise<SuccessResponse<operations["BudgetCodes_CreateBudgetCodesBatch"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes/batch", { tenant: client.tenantId });
       return client.request(path, { method: "POST" });
     },
-    async createBudgetCodesPartialBatch(tenant: number): Promise<SuccessResponse<operations["BudgetCodes_CreateBudgetCodesPartialBatch"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes/partial/batch", { tenant });
+    async createBudgetCodesPartialBatch(): Promise<SuccessResponse<operations["BudgetCodes_CreateBudgetCodesPartialBatch"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/work-breakdown-structure/budget-codes/partial/batch", { tenant: client.tenantId });
       return client.request(path, { method: "POST" });
     },
     },
     export: {
-    async jobs(tenant: number, query?: operations["Export_Jobs"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_Jobs"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/export/jobs", { tenant });
+    async jobs(query?: operations["Export_Jobs"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_Jobs"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/export/jobs", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async projects(tenant: number, query?: operations["Export_Projects"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_Projects"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/export/projects", { tenant });
+    async projects(query?: operations["Export_Projects"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_Projects"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/export/projects", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async appointments(tenant: number, query?: operations["Export_Appointments"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_Appointments"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/export/appointments", { tenant });
+    async appointments(query?: operations["Export_Appointments"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_Appointments"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/export/appointments", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async jobCancelReasons(tenant: number, query?: operations["Export_JobCancelReasons"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_JobCancelReasons"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/export/job-canceled-logs", { tenant });
+    async jobCancelReasons(query?: operations["Export_JobCancelReasons"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_JobCancelReasons"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/export/job-canceled-logs", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async jobNotes(tenant: number, query?: operations["Export_JobNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_JobNotes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/export/job-notes", { tenant });
+    async jobNotes(query?: operations["Export_JobNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_JobNotes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/export/job-notes", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async projectNotes(tenant: number, query?: operations["Export_ProjectNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_ProjectNotes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/export/project-notes", { tenant });
+    async projectNotes(query?: operations["Export_ProjectNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_ProjectNotes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/export/project-notes", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async jobHistory(tenant: number, query?: operations["Export_JobHistory"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_JobHistory"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/export/job-history", { tenant });
+    async jobHistory(query?: operations["Export_JobHistory"]["parameters"]["query"]): Promise<SuccessResponse<operations["Export_JobHistory"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/export/job-history", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },
     jobCancelReasons: {
-    async getList(tenant: number, query?: operations["JobCancelReasons_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["JobCancelReasons_GetList"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/job-cancel-reasons", { tenant });
+    async getList(query?: operations["JobCancelReasons_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["JobCancelReasons_GetList"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/job-cancel-reasons", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },
     jobEquipment: {
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["JobEquipment_Get"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/equipment", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["JobEquipment_Get"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/equipment", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async attach(tenant: number, id: number, body: NonNullable<operations["JobEquipment_Attach"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["JobEquipment_Attach"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/equipment", { tenant, id });
+    async attach(id: number, body: NonNullable<operations["JobEquipment_Attach"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["JobEquipment_Attach"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/equipment", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async detachBulk(tenant: number, id: number, body: NonNullable<operations["JobEquipment_DetachBulk"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["JobEquipment_DetachBulk"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/equipment", { tenant, id });
+    async detachBulk(id: number, body: NonNullable<operations["JobEquipment_DetachBulk"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["JobEquipment_DetachBulk"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/equipment", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async detach(tenant: number, id: number, equipmentId: number): Promise<SuccessResponse<operations["JobEquipment_Detach"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/equipment/{equipmentId}", { tenant, id, equipmentId });
+    async detach(id: number, equipmentId: number): Promise<SuccessResponse<operations["JobEquipment_Detach"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/equipment/{equipmentId}", { tenant: client.tenantId, id, equipmentId });
       return client.request(path, { method: "DELETE" });
     },
     },
     jobHoldReasons: {
-    async get(tenant: number, query?: operations["JobHoldReasons_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["JobHoldReasons_Get"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/job-hold-reasons", { tenant });
+    async get(query?: operations["JobHoldReasons_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["JobHoldReasons_Get"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/job-hold-reasons", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },
     jobs: {
-    async get(tenant: number, id: number, query?: operations["Jobs_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_Get"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}", { tenant, id });
+    async get(id: number, query?: operations["Jobs_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_Get"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["Jobs_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Jobs_Update"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["Jobs_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Jobs_Update"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getList(tenant: number, query?: operations["Jobs_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetList"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs", { tenant });
+    async getList(query?: operations["Jobs_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetList"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["Jobs_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Jobs_Create"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs", { tenant });
+    async create(body: NonNullable<operations["Jobs_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Jobs_Create"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async cancel(tenant: number, id: number, body: NonNullable<operations["Jobs_Cancel"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Jobs_Cancel"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/cancel", { tenant, id });
+    async cancel(id: number, body: NonNullable<operations["Jobs_Cancel"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Jobs_Cancel"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/cancel", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async removeCancellation(tenant: number, id: number): Promise<SuccessResponse<operations["Jobs_RemoveCancellation"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/remove-cancellation", { tenant, id });
+    async removeCancellation(id: number): Promise<SuccessResponse<operations["Jobs_RemoveCancellation"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/remove-cancellation", { tenant: client.tenantId, id });
       return client.request(path, { method: "PUT" });
     },
-    async getNotes(tenant: number, id: number, query?: operations["Jobs_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetNotes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/notes", { tenant, id });
+    async getNotes(id: number, query?: operations["Jobs_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetNotes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async createNote(tenant: number, id: number, body: NonNullable<operations["Jobs_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Jobs_CreateNote"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/notes", { tenant, id });
+    async createNote(id: number, body: NonNullable<operations["Jobs_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Jobs_CreateNote"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getHoldReasons(tenant: number, query: operations["Jobs_GetHoldReasons"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetHoldReasons"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/hold-reasons", { tenant });
+    async getHoldReasons(query: operations["Jobs_GetHoldReasons"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetHoldReasons"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/hold-reasons", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async getCancelReasons(tenant: number, query: operations["Jobs_GetCancelReasons"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetCancelReasons"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/cancel-reasons", { tenant });
+    async getCancelReasons(query: operations["Jobs_GetCancelReasons"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetCancelReasons"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/cancel-reasons", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async getHistory(tenant: number, id: number): Promise<SuccessResponse<operations["Jobs_GetHistory"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/history", { tenant, id });
+    async getHistory(id: number): Promise<SuccessResponse<operations["Jobs_GetHistory"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/history", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async getJobCanceledLogs(tenant: number, id: number, query?: operations["Jobs_GetJobCanceledLogs"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetJobCanceledLogs"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/canceled-log", { tenant, id });
+    async getJobCanceledLogs(id: number, query?: operations["Jobs_GetJobCanceledLogs"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetJobCanceledLogs"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/canceled-log", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async getBookedLog(tenant: number, id: number): Promise<SuccessResponse<operations["Jobs_GetBookedLog"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/booked-log", { tenant, id });
+    async getBookedLog(id: number): Promise<SuccessResponse<operations["Jobs_GetBookedLog"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/{id}/booked-log", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async getCustomFieldTypes(tenant: number, query?: operations["Jobs_GetCustomFieldTypes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetCustomFieldTypes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/custom-fields", { tenant });
+    async getCustomFieldTypes(query?: operations["Jobs_GetCustomFieldTypes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Jobs_GetCustomFieldTypes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/jobs/custom-fields", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },
     jobTypes: {
-    async getList(tenant: number, query?: operations["JobTypes_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["JobTypes_GetList"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/job-types", { tenant });
+    async getList(query?: operations["JobTypes_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["JobTypes_GetList"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/job-types", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["JobTypes_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["JobTypes_Create"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/job-types", { tenant });
+    async create(body: NonNullable<operations["JobTypes_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["JobTypes_Create"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/job-types", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async get(tenant: number, id: number, query?: operations["JobTypes_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["JobTypes_Get"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/job-types/{id}", { tenant, id });
+    async get(id: number, query?: operations["JobTypes_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["JobTypes_Get"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/job-types/{id}", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["JobTypes_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["JobTypes_Update"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/job-types/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["JobTypes_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["JobTypes_Update"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/job-types/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -307,82 +307,82 @@ export function createJpmApi(client: ServiceTitanClient) {
     },
     },
     projects: {
-    async get(tenant: number, id: number, query?: operations["Projects_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["Projects_Get"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}", { tenant, id });
+    async get(id: number, query?: operations["Projects_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["Projects_Get"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["Projects_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Projects_Update"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["Projects_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Projects_Update"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getList(tenant: number, query?: operations["Projects_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Projects_GetList"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/projects", { tenant });
+    async getList(query?: operations["Projects_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Projects_GetList"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/projects", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["Projects_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Projects_Create"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/projects", { tenant });
+    async create(body: NonNullable<operations["Projects_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Projects_Create"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/projects", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getNotes(tenant: number, id: number, query?: operations["Projects_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Projects_GetNotes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}/notes", { tenant, id });
+    async getNotes(id: number, query?: operations["Projects_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Projects_GetNotes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async createNote(tenant: number, id: number, body: NonNullable<operations["Projects_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Projects_CreateNote"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}/notes", { tenant, id });
+    async createNote(id: number, body: NonNullable<operations["Projects_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Projects_CreateNote"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async attachJob(tenant: number, id: number, jobId: number): Promise<SuccessResponse<operations["Projects_AttachJob"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}/attach-job/{jobId}", { tenant, id, jobId });
+    async attachJob(id: number, jobId: number): Promise<SuccessResponse<operations["Projects_AttachJob"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/{id}/attach-job/{jobId}", { tenant: client.tenantId, id, jobId });
       return client.request(path, { method: "POST" });
     },
-    async detachJob(tenant: number, jobId: number): Promise<SuccessResponse<operations["Projects_DetachJob"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/detach-job/{jobId}", { tenant, jobId });
+    async detachJob(jobId: number): Promise<SuccessResponse<operations["Projects_DetachJob"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/detach-job/{jobId}", { tenant: client.tenantId, jobId });
       return client.request(path, { method: "POST" });
     },
-    async getCustomFieldTypes(tenant: number, query?: operations["Projects_GetCustomFieldTypes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Projects_GetCustomFieldTypes"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/custom-fields", { tenant });
+    async getCustomFieldTypes(query?: operations["Projects_GetCustomFieldTypes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Projects_GetCustomFieldTypes"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/projects/custom-fields", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },
     projectStatuses: {
-    async getList(tenant: number, query?: operations["ProjectStatuses_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProjectStatuses_GetList"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/project-statuses", { tenant });
+    async getList(query?: operations["ProjectStatuses_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProjectStatuses_GetList"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/project-statuses", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["ProjectStatuses_Get"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/project-statuses/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["ProjectStatuses_Get"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/project-statuses/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
     },
     projectSubStatuses: {
-    async getList(tenant: number, query?: operations["ProjectSubStatuses_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProjectSubStatuses_GetList"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/project-substatuses", { tenant });
+    async getList(query?: operations["ProjectSubStatuses_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProjectSubStatuses_GetList"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/project-substatuses", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["ProjectSubStatuses_Get"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/project-substatuses/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["ProjectSubStatuses_Get"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/project-substatuses/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
     },
     projectTypes: {
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["ProjectTypes_Get"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/project-types/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["ProjectTypes_Get"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/project-types/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async getList(tenant: number, query?: operations["ProjectTypes_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProjectTypes_GetList"]>> {
-      const path = buildPath("/jpm/v2/tenant/{tenant}/project-types", { tenant });
+    async getList(query?: operations["ProjectTypes_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProjectTypes_GetList"]>> {
+      const path = buildPath("/jpm/v2/tenant/{tenant}/project-types", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },

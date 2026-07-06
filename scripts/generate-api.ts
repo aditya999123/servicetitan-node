@@ -126,8 +126,11 @@ function collectOperations(spec: RawSpec): OperationInfo[] {
 
 function renderMethod(op: OperationInfo, pathPrefix: string): string {
   const fullPathTemplate = `${pathPrefix}${op.pathTemplate}`;
-  const pathArgs = op.pathParams.map((param) => `${param.name}: ${param.type}`).join(", ");
-  const pathObjectLiteral = `{ ${op.pathParams.map((param) => param.name).join(", ")} }`;
+  const nonTenantPathParams = op.pathParams.filter((param) => param.name !== "tenant");
+  const pathArgs = nonTenantPathParams.map((param) => `${param.name}: ${param.type}`).join(", ");
+  const pathObjectLiteral = `{ ${op.pathParams
+    .map((param) => (param.name === "tenant" ? "tenant: client.tenantId" : param.name))
+    .join(", ")} }`;
   const queryType = `operations["${op.operationId}"]["parameters"]["query"]`;
   const queryArg = op.queryRequired ? `query: ${queryType}` : `query?: ${queryType}`;
 

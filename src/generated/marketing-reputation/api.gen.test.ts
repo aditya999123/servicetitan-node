@@ -30,11 +30,12 @@ test("reviews.reviews returns the raw Response and forwards query params", async
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
   const marketingReputation = createMarketingReputationApi(client);
 
-  const response = await marketingReputation.reviews.reviews("123", { page: 1 });
+  const response = await marketingReputation.reviews.reviews({ page: 1 });
   const text = await response.text();
 
   assert.equal(text, "plain text review data");

@@ -7,102 +7,102 @@ import { buildPath, buildQueryString, type SuccessResponse } from "../shared.ts"
 export function createSalestechApi(client: ServiceTitanClient) {
   return {
     estimates: {
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["Estimates_Get"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["Estimates_Get"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["Estimates_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Estimates_Update"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["Estimates_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Estimates_Update"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getList(tenant: number, query?: operations["Estimates_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Estimates_GetList"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates", { tenant });
+    async getList(query?: operations["Estimates_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Estimates_GetList"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["Estimates_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Estimates_Create"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates", { tenant });
+    async create(body: NonNullable<operations["Estimates_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Estimates_Create"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getItems(tenant: number, query?: operations["Estimates_GetItems"]["parameters"]["query"]): Promise<SuccessResponse<operations["Estimates_GetItems"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/items", { tenant });
+    async getItems(query?: operations["Estimates_GetItems"]["parameters"]["query"]): Promise<SuccessResponse<operations["Estimates_GetItems"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/items", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async sell(tenant: number, id: number, body: NonNullable<operations["Estimates_Sell"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Estimates_Sell"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/sell", { tenant, id });
+    async sell(id: number, body: NonNullable<operations["Estimates_Sell"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Estimates_Sell"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/sell", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async unsell(tenant: number, id: number): Promise<SuccessResponse<operations["Estimates_Unsell"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/unsell", { tenant, id });
+    async unsell(id: number): Promise<SuccessResponse<operations["Estimates_Unsell"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/unsell", { tenant: client.tenantId, id });
       return client.request(path, { method: "PUT" });
     },
-    async dismiss(tenant: number, id: number): Promise<SuccessResponse<operations["Estimates_Dismiss"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/dismiss", { tenant, id });
+    async dismiss(id: number): Promise<SuccessResponse<operations["Estimates_Dismiss"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/dismiss", { tenant: client.tenantId, id });
       return client.request(path, { method: "PUT" });
     },
-    async putItem(tenant: number, id: number, body: NonNullable<operations["Estimates_PutItem"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Estimates_PutItem"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/items", { tenant, id });
+    async putItem(id: number, body: NonNullable<operations["Estimates_PutItem"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Estimates_PutItem"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/items", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async deleteItem(tenant: number, id: number, itemId: number): Promise<SuccessResponse<operations["Estimates_DeleteItem"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/items/{itemId}", { tenant, id, itemId });
+    async deleteItem(id: number, itemId: number): Promise<SuccessResponse<operations["Estimates_DeleteItem"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/{id}/items/{itemId}", { tenant: client.tenantId, id, itemId });
       return client.request(path, { method: "DELETE" });
     },
     },
     estimatesExport: {
-    async estimates(tenant: number, query?: operations["EstimatesExport_Estimates"]["parameters"]["query"]): Promise<SuccessResponse<operations["EstimatesExport_Estimates"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/export/estimates", { tenant });
+    async estimates(query?: operations["EstimatesExport_Estimates"]["parameters"]["query"]): Promise<SuccessResponse<operations["EstimatesExport_Estimates"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/export/estimates", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async estimatesAsyncLegacy(tenant: number, query?: operations["EstimatesExport_EstimatesAsyncLegacy"]["parameters"]["query"]): Promise<SuccessResponse<operations["EstimatesExport_EstimatesAsyncLegacy"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/export", { tenant });
+    async estimatesAsyncLegacy(query?: operations["EstimatesExport_EstimatesAsyncLegacy"]["parameters"]["query"]): Promise<SuccessResponse<operations["EstimatesExport_EstimatesAsyncLegacy"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimates/export", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },
     estimatesStatus: {
-    async getEstimateStatusChanges(tenant: number, id: number): Promise<SuccessResponse<operations["EstimatesStatus_GetEstimateStatusChanges"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/status/estimates/{id}/changes", { tenant, id });
+    async getEstimateStatusChanges(id: number): Promise<SuccessResponse<operations["EstimatesStatus_GetEstimateStatusChanges"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/status/estimates/{id}/changes", { tenant: client.tenantId, id });
       return client.request(path);
     },
     },
     estimateTemplates: {
-    async get(tenant: number, query?: operations["EstimateTemplates_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["EstimateTemplates_Get"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates", { tenant });
+    async get(query?: operations["EstimateTemplates_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["EstimateTemplates_Get"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["EstimateTemplates_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["EstimateTemplates_Create"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates", { tenant });
+    async create(body: NonNullable<operations["EstimateTemplates_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["EstimateTemplates_Create"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getById(tenant: number, id: number): Promise<SuccessResponse<operations["EstimateTemplates_GetById"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates/{id}", { tenant, id });
+    async getById(id: number): Promise<SuccessResponse<operations["EstimateTemplates_GetById"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async delete(tenant: number, id: number): Promise<SuccessResponse<operations["EstimateTemplates_Delete"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates/{id}", { tenant, id });
+    async delete(id: number): Promise<SuccessResponse<operations["EstimateTemplates_Delete"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates/{id}", { tenant: client.tenantId, id });
       return client.request(path, { method: "DELETE" });
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["EstimateTemplates_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["EstimateTemplates_Update"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["EstimateTemplates_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["EstimateTemplates_Update"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/estimate-templates/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -111,28 +111,28 @@ export function createSalestechApi(client: ServiceTitanClient) {
     },
     },
     proposalTemplates: {
-    async get(tenant: number, query?: operations["ProposalTemplates_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProposalTemplates_Get"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates", { tenant });
+    async get(query?: operations["ProposalTemplates_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProposalTemplates_Get"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["ProposalTemplates_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ProposalTemplates_Create"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates", { tenant });
+    async create(body: NonNullable<operations["ProposalTemplates_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ProposalTemplates_Create"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getById(tenant: number, id: number): Promise<SuccessResponse<operations["ProposalTemplates_GetById"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates/{id}", { tenant, id });
+    async getById(id: number): Promise<SuccessResponse<operations["ProposalTemplates_GetById"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async delete(tenant: number, id: number): Promise<SuccessResponse<operations["ProposalTemplates_Delete"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates/{id}", { tenant, id });
+    async delete(id: number): Promise<SuccessResponse<operations["ProposalTemplates_Delete"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates/{id}", { tenant: client.tenantId, id });
       return client.request(path, { method: "DELETE" });
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["ProposalTemplates_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ProposalTemplates_Update"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["ProposalTemplates_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ProposalTemplates_Update"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-templates/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -141,8 +141,8 @@ export function createSalestechApi(client: ServiceTitanClient) {
     },
     },
     proposalTypes: {
-    async get(tenant: number, query?: operations["ProposalTypes_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProposalTypes_Get"]>> {
-      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-types", { tenant });
+    async get(query?: operations["ProposalTypes_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["ProposalTypes_Get"]>> {
+      const path = buildPath("/sales/v2/tenant/{tenant}/proposal-types", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },

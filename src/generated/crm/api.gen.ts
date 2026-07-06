@@ -7,24 +7,24 @@ import { buildPath, buildQueryString, type SuccessResponse } from "../shared.ts"
 export function createCrmApi(client: ServiceTitanClient) {
   return {
     bookingProviderTags: {
-    async getList(tenant: number, query?: operations["BookingProviderTags_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["BookingProviderTags_GetList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider-tags", { tenant });
+    async getList(query?: operations["BookingProviderTags_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["BookingProviderTags_GetList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider-tags", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["BookingProviderTags_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BookingProviderTags_Create"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider-tags", { tenant });
+    async create(body: NonNullable<operations["BookingProviderTags_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BookingProviderTags_Create"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider-tags", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["BookingProviderTags_Get"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider-tags/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["BookingProviderTags_Get"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider-tags/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["BookingProviderTags_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BookingProviderTags_Update"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider-tags/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["BookingProviderTags_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BookingProviderTags_Update"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider-tags/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -33,68 +33,68 @@ export function createCrmApi(client: ServiceTitanClient) {
     },
     },
     bookings: {
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["Bookings_Get"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/bookings/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["Bookings_Get"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/bookings/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async getList(tenant: number, query?: operations["Bookings_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Bookings_GetList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/bookings", { tenant });
+    async getList(query?: operations["Bookings_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Bookings_GetList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/bookings", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async getContactList(tenant: number, id: number, query?: operations["Bookings_GetContactList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Bookings_GetContactList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/bookings/{id}/contacts", { tenant, id });
+    async getContactList(id: number, query?: operations["Bookings_GetContactList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Bookings_GetContactList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/bookings/{id}/contacts", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async getForProvider(tenant: number, booking_provider: number, id: number): Promise<SuccessResponse<operations["Bookings_GetForProvider"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}", { tenant, booking_provider, id });
+    async getForProvider(booking_provider: number, id: number): Promise<SuccessResponse<operations["Bookings_GetForProvider"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}", { tenant: client.tenantId, booking_provider, id });
       return client.request(path);
     },
-    async update(tenant: number, booking_provider: number, id: number, body: NonNullable<operations["Bookings_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_Update"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}", { tenant, booking_provider, id });
+    async update(booking_provider: number, id: number, body: NonNullable<operations["Bookings_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_Update"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}", { tenant: client.tenantId, booking_provider, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getList2(tenant: number, booking_provider: number, query?: operations["Bookings_GetList2"]["parameters"]["query"]): Promise<SuccessResponse<operations["Bookings_GetList2"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings", { tenant, booking_provider });
+    async getList2(booking_provider: number, query?: operations["Bookings_GetList2"]["parameters"]["query"]): Promise<SuccessResponse<operations["Bookings_GetList2"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings", { tenant: client.tenantId, booking_provider });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, booking_provider: number, body: NonNullable<operations["Bookings_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_Create"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings", { tenant, booking_provider });
+    async create(booking_provider: number, body: NonNullable<operations["Bookings_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_Create"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings", { tenant: client.tenantId, booking_provider });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getContactList2(tenant: number, booking_provider: number, id: number, query?: operations["Bookings_GetContactList2"]["parameters"]["query"]): Promise<SuccessResponse<operations["Bookings_GetContactList2"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/contacts", { tenant, booking_provider, id });
+    async getContactList2(booking_provider: number, id: number, query?: operations["Bookings_GetContactList2"]["parameters"]["query"]): Promise<SuccessResponse<operations["Bookings_GetContactList2"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/contacts", { tenant: client.tenantId, booking_provider, id });
       return client.request(path + buildQueryString(query));
     },
-    async createContact(tenant: number, booking_provider: number, id: number, body: NonNullable<operations["Bookings_CreateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_CreateContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/contacts", { tenant, booking_provider, id });
+    async createContact(booking_provider: number, id: number, body: NonNullable<operations["Bookings_CreateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_CreateContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/contacts", { tenant: client.tenantId, booking_provider, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async deleteContact(tenant: number, booking_provider: number, id: number, contactId: number): Promise<SuccessResponse<operations["Bookings_DeleteContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/contacts/{contactId}", { tenant, booking_provider, id, contactId });
+    async deleteContact(booking_provider: number, id: number, contactId: number): Promise<SuccessResponse<operations["Bookings_DeleteContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/contacts/{contactId}", { tenant: client.tenantId, booking_provider, id, contactId });
       return client.request(path, { method: "DELETE" });
     },
-    async updateBookingContact(tenant: number, booking_provider: number, id: number, contactId: number, body: NonNullable<operations["Bookings_UpdateBookingContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_UpdateBookingContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/contacts/{contactId}", { tenant, booking_provider, id, contactId });
+    async updateBookingContact(booking_provider: number, id: number, contactId: number, body: NonNullable<operations["Bookings_UpdateBookingContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_UpdateBookingContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/contacts/{contactId}", { tenant: client.tenantId, booking_provider, id, contactId });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async dismissBooking(tenant: number, booking_provider: string, id: number, body: NonNullable<operations["Bookings_DismissBooking"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_DismissBooking"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/dismiss", { tenant, booking_provider, id });
+    async dismissBooking(booking_provider: string, id: number, body: NonNullable<operations["Bookings_DismissBooking"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Bookings_DismissBooking"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/booking-provider/{booking_provider}/bookings/{id}/dismiss", { tenant: client.tenantId, booking_provider, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -103,16 +103,16 @@ export function createCrmApi(client: ServiceTitanClient) {
     },
     },
     bulkTags: {
-    async addTags(tenant: number, body: NonNullable<operations["BulkTags_AddTags"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BulkTags_AddTags"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/tags", { tenant });
+    async addTags(body: NonNullable<operations["BulkTags_AddTags"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BulkTags_AddTags"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/tags", { tenant: client.tenantId });
       return client.request(path, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async removeTags(tenant: number, body: NonNullable<operations["BulkTags_RemoveTags"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BulkTags_RemoveTags"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/tags", { tenant });
+    async removeTags(body: NonNullable<operations["BulkTags_RemoveTags"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["BulkTags_RemoveTags"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/tags", { tenant: client.tenantId });
       return client.request(path, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -121,36 +121,36 @@ export function createCrmApi(client: ServiceTitanClient) {
     },
     },
     contactMethods: {
-    async getContactMethods(tenant: number, contactId: string, query?: operations["ContactMethods_GetContactMethods"]["parameters"]["query"]): Promise<SuccessResponse<operations["ContactMethods_GetContactMethods"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods", { tenant, contactId });
+    async getContactMethods(contactId: string, query?: operations["ContactMethods_GetContactMethods"]["parameters"]["query"]): Promise<SuccessResponse<operations["ContactMethods_GetContactMethods"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods", { tenant: client.tenantId, contactId });
       return client.request(path + buildQueryString(query));
     },
-    async createContactMethod(tenant: number, contactId: string, body: NonNullable<operations["ContactMethods_CreateContactMethod"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ContactMethods_CreateContactMethod"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods", { tenant, contactId });
+    async createContactMethod(contactId: string, body: NonNullable<operations["ContactMethods_CreateContactMethod"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ContactMethods_CreateContactMethod"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods", { tenant: client.tenantId, contactId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getContactMethod(tenant: number, contactId: string, contactMethodId: string): Promise<SuccessResponse<operations["ContactMethods_GetContactMethod"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}", { tenant, contactId, contactMethodId });
+    async getContactMethod(contactId: string, contactMethodId: string): Promise<SuccessResponse<operations["ContactMethods_GetContactMethod"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}", { tenant: client.tenantId, contactId, contactMethodId });
       return client.request(path);
     },
-    async upsertContactMethod(tenant: number, contactId: string, contactMethodId: string, body: NonNullable<operations["ContactMethods_UpsertContactMethod"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ContactMethods_UpsertContactMethod"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}", { tenant, contactId, contactMethodId });
+    async upsertContactMethod(contactId: string, contactMethodId: string, body: NonNullable<operations["ContactMethods_UpsertContactMethod"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ContactMethods_UpsertContactMethod"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}", { tenant: client.tenantId, contactId, contactMethodId });
       return client.request(path, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async deleteContactMethod(tenant: number, contactId: string, contactMethodId: string): Promise<SuccessResponse<operations["ContactMethods_DeleteContactMethod"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}", { tenant, contactId, contactMethodId });
+    async deleteContactMethod(contactId: string, contactMethodId: string): Promise<SuccessResponse<operations["ContactMethods_DeleteContactMethod"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}", { tenant: client.tenantId, contactId, contactMethodId });
       return client.request(path, { method: "DELETE" });
     },
-    async updateContactMethod(tenant: number, contactId: string, contactMethodId: string, body: NonNullable<operations["ContactMethods_UpdateContactMethod"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ContactMethods_UpdateContactMethod"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}", { tenant, contactId, contactMethodId });
+    async updateContactMethod(contactId: string, contactMethodId: string, body: NonNullable<operations["ContactMethods_UpdateContactMethod"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ContactMethods_UpdateContactMethod"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}", { tenant: client.tenantId, contactId, contactMethodId });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -159,16 +159,16 @@ export function createCrmApi(client: ServiceTitanClient) {
     },
     },
     contactPreferences: {
-    async getContactMethodPreferences(tenant: number, contactId: string, contactMethodId: string): Promise<SuccessResponse<operations["ContactPreferences_GetContactMethodPreferences"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}/preferences", { tenant, contactId, contactMethodId });
+    async getContactMethodPreferences(contactId: string, contactMethodId: string): Promise<SuccessResponse<operations["ContactPreferences_GetContactMethodPreferences"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}/preferences", { tenant: client.tenantId, contactId, contactMethodId });
       return client.request(path);
     },
-    async getContactMethodPreference(tenant: number, contactId: string, contactMethodId: string, preferenceName: string): Promise<SuccessResponse<operations["ContactPreferences_GetContactMethodPreference"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}/preferences/{preferenceName}", { tenant, contactId, contactMethodId, preferenceName });
+    async getContactMethodPreference(contactId: string, contactMethodId: string, preferenceName: string): Promise<SuccessResponse<operations["ContactPreferences_GetContactMethodPreference"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}/preferences/{preferenceName}", { tenant: client.tenantId, contactId, contactMethodId, preferenceName });
       return client.request(path);
     },
-    async updateContactMethodPreference(tenant: number, contactId: string, contactMethodId: string, preferenceName: string, body: NonNullable<operations["ContactPreferences_UpdateContactMethodPreference"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ContactPreferences_UpdateContactMethodPreference"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}/preferences/{preferenceName}", { tenant, contactId, contactMethodId, preferenceName });
+    async updateContactMethodPreference(contactId: string, contactMethodId: string, preferenceName: string, body: NonNullable<operations["ContactPreferences_UpdateContactMethodPreference"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["ContactPreferences_UpdateContactMethodPreference"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/contact-methods/{contactMethodId}/preferences/{preferenceName}", { tenant: client.tenantId, contactId, contactMethodId, preferenceName });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -177,230 +177,230 @@ export function createCrmApi(client: ServiceTitanClient) {
     },
     },
     contacts: {
-    async get(tenant: number, id: string): Promise<SuccessResponse<operations["Contacts_Get"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{id}", { tenant, id });
+    async get(id: string): Promise<SuccessResponse<operations["Contacts_Get"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async replace(tenant: number, id: string, body: NonNullable<operations["Contacts_Replace"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Contacts_Replace"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{id}", { tenant, id });
+    async replace(id: string, body: NonNullable<operations["Contacts_Replace"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Contacts_Replace"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async deleteContact(tenant: number, id: string): Promise<SuccessResponse<operations["Contacts_DeleteContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{id}", { tenant, id });
+    async deleteContact(id: string): Promise<SuccessResponse<operations["Contacts_DeleteContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{id}", { tenant: client.tenantId, id });
       return client.request(path, { method: "DELETE" });
     },
-    async update(tenant: number, id: string, body: NonNullable<operations["Contacts_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Contacts_Update"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{id}", { tenant, id });
+    async update(id: string, body: NonNullable<operations["Contacts_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Contacts_Update"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getByRelationshipId(tenant: number, relationshipId: number, query?: operations["Contacts_GetByRelationshipId"]["parameters"]["query"]): Promise<SuccessResponse<operations["Contacts_GetByRelationshipId"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/relationships/{relationshipId}", { tenant, relationshipId });
+    async getByRelationshipId(relationshipId: number, query?: operations["Contacts_GetByRelationshipId"]["parameters"]["query"]): Promise<SuccessResponse<operations["Contacts_GetByRelationshipId"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/relationships/{relationshipId}", { tenant: client.tenantId, relationshipId });
       return client.request(path + buildQueryString(query));
     },
-    async getList(tenant: number, query?: operations["Contacts_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Contacts_GetList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts", { tenant });
+    async getList(query?: operations["Contacts_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Contacts_GetList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["Contacts_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Contacts_Create"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts", { tenant });
+    async create(body: NonNullable<operations["Contacts_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Contacts_Create"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async createContactRelationship(tenant: number, contactId: string, relatedEntityId: number, typeSlug: string): Promise<SuccessResponse<operations["Contacts_CreateContactRelationship"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/relationships/{relatedEntityId}/{typeSlug}", { tenant, contactId, relatedEntityId, typeSlug });
+    async createContactRelationship(contactId: string, relatedEntityId: number, typeSlug: string): Promise<SuccessResponse<operations["Contacts_CreateContactRelationship"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/relationships/{relatedEntityId}/{typeSlug}", { tenant: client.tenantId, contactId, relatedEntityId, typeSlug });
       return client.request(path, { method: "POST" });
     },
-    async deleteContactRelationship(tenant: number, contactId: string, relatedEntityId: number, typeSlug: string): Promise<SuccessResponse<operations["Contacts_DeleteContactRelationship"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/relationships/{relatedEntityId}/{typeSlug}", { tenant, contactId, relatedEntityId, typeSlug });
+    async deleteContactRelationship(contactId: string, relatedEntityId: number, typeSlug: string): Promise<SuccessResponse<operations["Contacts_DeleteContactRelationship"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/relationships/{relatedEntityId}/{typeSlug}", { tenant: client.tenantId, contactId, relatedEntityId, typeSlug });
       return client.request(path, { method: "DELETE" });
     },
-    async getContactRelationshipList(tenant: number, contactId: string, query?: operations["Contacts_GetContactRelationshipList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Contacts_GetContactRelationshipList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/relationships", { tenant, contactId });
+    async getContactRelationshipList(contactId: string, query?: operations["Contacts_GetContactRelationshipList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Contacts_GetContactRelationshipList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/{contactId}/relationships", { tenant: client.tenantId, contactId });
       return client.request(path + buildQueryString(query));
     },
-    async getPreferenceMetadataList(tenant: number): Promise<SuccessResponse<operations["Contacts_GetPreferenceMetadataList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/preferences", { tenant });
+    async getPreferenceMetadataList(): Promise<SuccessResponse<operations["Contacts_GetPreferenceMetadataList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/preferences", { tenant: client.tenantId });
       return client.request(path);
     },
-    async searchContactMethods(tenant: number, query?: operations["Contacts_SearchContactMethods"]["parameters"]["query"]): Promise<SuccessResponse<operations["Contacts_SearchContactMethods"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/contact-methods", { tenant });
+    async searchContactMethods(query?: operations["Contacts_SearchContactMethods"]["parameters"]["query"]): Promise<SuccessResponse<operations["Contacts_SearchContactMethods"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/contacts/contact-methods", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },
     customers: {
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["Customers_Get"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["Customers_Get"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["Customers_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_Update"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["Customers_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_Update"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getList(tenant: number, query?: operations["Customers_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers", { tenant });
+    async getList(query?: operations["Customers_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["Customers_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_Create"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers", { tenant });
+    async create(body: NonNullable<operations["Customers_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_Create"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getNotes(tenant: number, id: number, query?: operations["Customers_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetNotes"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/notes", { tenant, id });
+    async getNotes(id: number, query?: operations["Customers_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetNotes"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async createNote(tenant: number, id: number, body: NonNullable<operations["Customers_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_CreateNote"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/notes", { tenant, id });
+    async createNote(id: number, body: NonNullable<operations["Customers_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_CreateNote"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async deleteNote(tenant: number, id: number, noteId: number): Promise<SuccessResponse<operations["Customers_DeleteNote"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/notes/{noteId}", { tenant, id, noteId });
+    async deleteNote(id: number, noteId: number): Promise<SuccessResponse<operations["Customers_DeleteNote"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/notes/{noteId}", { tenant: client.tenantId, id, noteId });
       return client.request(path, { method: "DELETE" });
     },
-    async getContactList(tenant: number, id: number, query?: operations["Customers_GetContactList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetContactList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/contacts", { tenant, id });
+    async getContactList(id: number, query?: operations["Customers_GetContactList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetContactList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/contacts", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async createContact(tenant: number, id: number, body: NonNullable<operations["Customers_CreateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_CreateContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/contacts", { tenant, id });
+    async createContact(id: number, body: NonNullable<operations["Customers_CreateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_CreateContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/contacts", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async deleteContact(tenant: number, id: number, contactId: number): Promise<SuccessResponse<operations["Customers_DeleteContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/contacts/{contactId}", { tenant, id, contactId });
+    async deleteContact(id: number, contactId: number): Promise<SuccessResponse<operations["Customers_DeleteContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/contacts/{contactId}", { tenant: client.tenantId, id, contactId });
       return client.request(path, { method: "DELETE" });
     },
-    async updateContact(tenant: number, id: number, contactId: number, body: NonNullable<operations["Customers_UpdateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_UpdateContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/contacts/{contactId}", { tenant, id, contactId });
+    async updateContact(id: number, contactId: number, body: NonNullable<operations["Customers_UpdateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Customers_UpdateContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/contacts/{contactId}", { tenant: client.tenantId, id, contactId });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getModifiedContactsList(tenant: number, query?: operations["Customers_GetModifiedContactsList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetModifiedContactsList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/contacts", { tenant });
+    async getModifiedContactsList(query?: operations["Customers_GetModifiedContactsList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetModifiedContactsList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/contacts", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async createTag(tenant: number, id: number, tagTypeId: number): Promise<SuccessResponse<operations["Customers_CreateTag"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/tags/{tagTypeId}", { tenant, id, tagTypeId });
+    async createTag(id: number, tagTypeId: number): Promise<SuccessResponse<operations["Customers_CreateTag"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/tags/{tagTypeId}", { tenant: client.tenantId, id, tagTypeId });
       return client.request(path, { method: "POST" });
     },
-    async deleteTag(tenant: number, id: number, tagTypeId: number): Promise<SuccessResponse<operations["Customers_DeleteTag"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/tags/{tagTypeId}", { tenant, id, tagTypeId });
+    async deleteTag(id: number, tagTypeId: number): Promise<SuccessResponse<operations["Customers_DeleteTag"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/{id}/tags/{tagTypeId}", { tenant: client.tenantId, id, tagTypeId });
       return client.request(path, { method: "DELETE" });
     },
-    async getCustomFieldTypes(tenant: number, query?: operations["Customers_GetCustomFieldTypes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetCustomFieldTypes"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/customers/custom-fields", { tenant });
+    async getCustomFieldTypes(query?: operations["Customers_GetCustomFieldTypes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Customers_GetCustomFieldTypes"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/customers/custom-fields", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },
     export: {
-    async get(tenant: number, query?: operations["ExportBookings_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportBookings_Get"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/export/bookings", { tenant });
+    async get(query?: operations["ExportBookings_Get"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportBookings_Get"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/export/bookings", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async customersContacts(tenant: number, query?: operations["ExportContacts_CustomersContacts"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportContacts_CustomersContacts"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/export/customers/contacts", { tenant });
+    async customersContacts(query?: operations["ExportContacts_CustomersContacts"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportContacts_CustomersContacts"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/export/customers/contacts", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async locationsContacts(tenant: number, query?: operations["ExportContacts_LocationsContacts"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportContacts_LocationsContacts"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/export/locations/contacts", { tenant });
+    async locationsContacts(query?: operations["ExportContacts_LocationsContacts"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportContacts_LocationsContacts"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/export/locations/contacts", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async getCustomers(tenant: number, query?: operations["ExportCustomers_GetCustomers"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportCustomers_GetCustomers"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/export/customers", { tenant });
+    async getCustomers(query?: operations["ExportCustomers_GetCustomers"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportCustomers_GetCustomers"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/export/customers", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async leads(tenant: number, query?: operations["ExportLeads_Leads"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportLeads_Leads"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/export/leads", { tenant });
+    async leads(query?: operations["ExportLeads_Leads"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportLeads_Leads"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/export/leads", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async locations(tenant: number, query?: operations["ExportLocations_Locations"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportLocations_Locations"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/export/locations", { tenant });
+    async locations(query?: operations["ExportLocations_Locations"]["parameters"]["query"]): Promise<SuccessResponse<operations["ExportLocations_Locations"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/export/locations", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
     },
     leads: {
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["Leads_Get"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["Leads_Get"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["Leads_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_Update"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["Leads_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_Update"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getList(tenant: number, query?: operations["Leads_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Leads_GetList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/leads", { tenant });
+    async getList(query?: operations["Leads_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Leads_GetList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/leads", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["Leads_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_Create"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/leads", { tenant });
+    async create(body: NonNullable<operations["Leads_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_Create"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/leads", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async createFollowUp(tenant: number, id: number, body: NonNullable<operations["Leads_CreateFollowUp"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_CreateFollowUp"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}/follow-up", { tenant, id });
+    async createFollowUp(id: number, body: NonNullable<operations["Leads_CreateFollowUp"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_CreateFollowUp"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}/follow-up", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getNotes(tenant: number, id: number, query?: operations["Leads_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Leads_GetNotes"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}/notes", { tenant, id });
+    async getNotes(id: number, query?: operations["Leads_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Leads_GetNotes"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async createNote(tenant: number, id: number, body: NonNullable<operations["Leads_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_CreateNote"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}/notes", { tenant, id });
+    async createNote(id: number, body: NonNullable<operations["Leads_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_CreateNote"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async dismiss(tenant: number, id: number, body: NonNullable<operations["Leads_Dismiss"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_Dismiss"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}/dismiss", { tenant, id });
+    async dismiss(id: number, body: NonNullable<operations["Leads_Dismiss"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Leads_Dismiss"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/leads/{id}/dismiss", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async submitLeadForm(tenant: number, body: NonNullable<operations["Leads_SubmitLeadForm"]["requestBody"]>["content"]["application/json"], query?: operations["Leads_SubmitLeadForm"]["parameters"]["query"]): Promise<SuccessResponse<operations["Leads_SubmitLeadForm"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/leads/form", { tenant });
+    async submitLeadForm(body: NonNullable<operations["Leads_SubmitLeadForm"]["requestBody"]>["content"]["application/json"], query?: operations["Leads_SubmitLeadForm"]["parameters"]["query"]): Promise<SuccessResponse<operations["Leads_SubmitLeadForm"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/leads/form", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -409,92 +409,92 @@ export function createCrmApi(client: ServiceTitanClient) {
     },
     },
     locations: {
-    async get(tenant: number, id: number): Promise<SuccessResponse<operations["Locations_Get"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}", { tenant, id });
+    async get(id: number): Promise<SuccessResponse<operations["Locations_Get"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}", { tenant: client.tenantId, id });
       return client.request(path);
     },
-    async update(tenant: number, id: number, body: NonNullable<operations["Locations_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_Update"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}", { tenant, id });
+    async update(id: number, body: NonNullable<operations["Locations_Update"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_Update"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getList(tenant: number, query?: operations["Locations_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations", { tenant });
+    async getList(query?: operations["Locations_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async create(tenant: number, body: NonNullable<operations["Locations_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_Create"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations", { tenant });
+    async create(body: NonNullable<operations["Locations_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_Create"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations", { tenant: client.tenantId });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getNotes(tenant: number, id: number, query?: operations["Locations_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetNotes"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/notes", { tenant, id });
+    async getNotes(id: number, query?: operations["Locations_GetNotes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetNotes"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async createNote(tenant: number, id: number, body: NonNullable<operations["Locations_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_CreateNote"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/notes", { tenant, id });
+    async createNote(id: number, body: NonNullable<operations["Locations_CreateNote"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_CreateNote"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/notes", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async deleteNote(tenant: number, id: number, noteId: number): Promise<SuccessResponse<operations["Locations_DeleteNote"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/notes/{noteId}", { tenant, id, noteId });
+    async deleteNote(id: number, noteId: number): Promise<SuccessResponse<operations["Locations_DeleteNote"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/notes/{noteId}", { tenant: client.tenantId, id, noteId });
       return client.request(path, { method: "DELETE" });
     },
-    async getContactList(tenant: number, id: number, query?: operations["Locations_GetContactList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetContactList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/contacts", { tenant, id });
+    async getContactList(id: number, query?: operations["Locations_GetContactList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetContactList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/contacts", { tenant: client.tenantId, id });
       return client.request(path + buildQueryString(query));
     },
-    async createContact(tenant: number, id: number, body: NonNullable<operations["Locations_CreateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_CreateContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/contacts", { tenant, id });
+    async createContact(id: number, body: NonNullable<operations["Locations_CreateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_CreateContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/contacts", { tenant: client.tenantId, id });
       return client.request(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async getLocationsContactsList(tenant: number, query?: operations["Locations_GetLocationsContactsList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetLocationsContactsList"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/contacts", { tenant });
+    async getLocationsContactsList(query?: operations["Locations_GetLocationsContactsList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetLocationsContactsList"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/contacts", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async deleteContact(tenant: number, id: number, contactId: number): Promise<SuccessResponse<operations["Locations_DeleteContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/contacts/{contactId}", { tenant, id, contactId });
+    async deleteContact(id: number, contactId: number): Promise<SuccessResponse<operations["Locations_DeleteContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/contacts/{contactId}", { tenant: client.tenantId, id, contactId });
       return client.request(path, { method: "DELETE" });
     },
-    async updateContact(tenant: number, id: number, contactId: number, body: NonNullable<operations["Locations_UpdateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_UpdateContact"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/contacts/{contactId}", { tenant, id, contactId });
+    async updateContact(id: number, contactId: number, body: NonNullable<operations["Locations_UpdateContact"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Locations_UpdateContact"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/contacts/{contactId}", { tenant: client.tenantId, id, contactId });
       return client.request(path, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
     },
-    async createTag(tenant: number, id: number, tagTypeId: number): Promise<SuccessResponse<operations["Locations_CreateTag"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/tags/{tagTypeId}", { tenant, id, tagTypeId });
+    async createTag(id: number, tagTypeId: number): Promise<SuccessResponse<operations["Locations_CreateTag"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/tags/{tagTypeId}", { tenant: client.tenantId, id, tagTypeId });
       return client.request(path, { method: "POST" });
     },
-    async deleteTag(tenant: number, id: number, tagTypeId: number): Promise<SuccessResponse<operations["Locations_DeleteTag"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/tags/{tagTypeId}", { tenant, id, tagTypeId });
+    async deleteTag(id: number, tagTypeId: number): Promise<SuccessResponse<operations["Locations_DeleteTag"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/tags/{tagTypeId}", { tenant: client.tenantId, id, tagTypeId });
       return client.request(path, { method: "DELETE" });
     },
-    async getCustomFieldTypes(tenant: number, query?: operations["Locations_GetCustomFieldTypes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetCustomFieldTypes"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/custom-fields", { tenant });
+    async getCustomFieldTypes(query?: operations["Locations_GetCustomFieldTypes"]["parameters"]["query"]): Promise<SuccessResponse<operations["Locations_GetCustomFieldTypes"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/custom-fields", { tenant: client.tenantId });
       return client.request(path + buildQueryString(query));
     },
-    async updatePreferredTechnician(tenant: number, id: number, preferredTechnicianId: number): Promise<SuccessResponse<operations["Locations_UpdatePreferredTechnician"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/preferredtechnician/{preferredTechnicianId}", { tenant, id, preferredTechnicianId });
+    async updatePreferredTechnician(id: number, preferredTechnicianId: number): Promise<SuccessResponse<operations["Locations_UpdatePreferredTechnician"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/preferredtechnician/{preferredTechnicianId}", { tenant: client.tenantId, id, preferredTechnicianId });
       return client.request(path, { method: "POST" });
     },
-    async getPreferredTechnician(tenant: number, id: number): Promise<SuccessResponse<operations["Locations_GetPreferredTechnician"]>> {
-      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/preferredtechnician", { tenant, id });
+    async getPreferredTechnician(id: number): Promise<SuccessResponse<operations["Locations_GetPreferredTechnician"]>> {
+      const path = buildPath("/crm/v2/tenant/{tenant}/locations/{id}/preferredtechnician", { tenant: client.tenantId, id });
       return client.request(path);
     },
     },

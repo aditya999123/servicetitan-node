@@ -29,11 +29,12 @@ test("calls.getRecording returns the raw Response for binary audio", async (t) =
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
   const telecom = createTelecomApi(client);
 
-  const response = await telecom.calls.getRecording(123, 456);
+  const response = await telecom.calls.getRecording(456);
   const buffer = new Uint8Array(await response.arrayBuffer());
 
   assert.deepEqual(buffer, audioBytes);
@@ -57,11 +58,12 @@ test("calls.getVoiceMail returns the raw Response for binary audio", async (t) =
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
   const telecom = createTelecomApi(client);
 
-  const response = await telecom.calls.getVoiceMail(123, 456);
+  const response = await telecom.calls.getVoiceMail(456);
   const buffer = new Uint8Array(await response.arrayBuffer());
 
   assert.deepEqual(buffer, audioBytes);

@@ -26,6 +26,7 @@ function newSettingsApi() {
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
   return createSettingsApi(client);
@@ -39,7 +40,7 @@ test("employees.getList builds the correct URL with query params", async (t) => 
   });
 
   const settings = newSettingsApi();
-  const result = await settings.employees.getList(123, { page: 1, pageSize: 50 });
+  const result = await settings.employees.getList({ page: 1, pageSize: 50 });
 
   assert.equal(calls.length, 1);
   assert.equal(
@@ -57,7 +58,7 @@ test("employees.get builds the correct URL with only path params", async (t) => 
   });
 
   const settings = newSettingsApi();
-  const result = await settings.employees.get(123, 456);
+  const result = await settings.employees.get(456);
 
   assert.equal(calls.length, 1);
   assert.equal(
@@ -79,7 +80,7 @@ test("employees.create sends a POST with a JSON body", async (t) => {
   });
 
   const settings = newSettingsApi();
-  const result = await settings.employees.create(123, { name: "New Employee" } as never);
+  const result = await settings.employees.create({ name: "New Employee" } as never);
 
   assert.equal(calls.length, 1);
   assert.equal(calls[0].method, "POST");
@@ -95,7 +96,7 @@ test("intacctBusinessUnitMappings.get serializes array query params as repeated 
   });
 
   const settings = newSettingsApi();
-  await settings.intacctBusinessUnitMappings.get(123, {
+  await settings.intacctBusinessUnitMappings.get({
     page: 1,
     pageSize: 50,
     includeTotal: true,

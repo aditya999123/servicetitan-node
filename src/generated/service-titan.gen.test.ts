@@ -27,10 +27,11 @@ test("ServiceTitan composes domains onto the shared client", async (t) => {
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
 
-  const result = await st.crm.contacts.get(123, "abc-123");
+  const result = await st.crm.contacts.get("abc-123");
 
   assert.deepEqual(result, { id: "abc-123", name: "Jane" });
   assert.equal(
@@ -55,10 +56,11 @@ test("st.client shares the same token cache as domain methods", async (t) => {
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
 
-  await st.settings.employees.getList(123);
+  await st.settings.employees.getList();
   await st.client.request("/settings/v2/tenant/123/some-other-endpoint");
 
   assert.equal(tokenFetchCount, 1);

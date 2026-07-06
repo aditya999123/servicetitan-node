@@ -27,6 +27,7 @@ test("attaches Authorization and ST-App-Key headers and resolves parsed JSON on 
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
 
@@ -55,6 +56,7 @@ test("throws ServiceTitanApiError with status and parsed body on a non-2xx respo
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
 
@@ -83,6 +85,7 @@ test("returns undefined for a 204 No Content response", async (t) => {
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
 
@@ -108,6 +111,7 @@ test("requestRaw resolves the raw Response without parsing the body", async (t) 
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
 
@@ -130,6 +134,7 @@ test("requestRaw throws ServiceTitanApiError on a non-2xx response", async (t) =
     clientId: "id",
     clientSecret: "secret",
     appKey: "app-key",
+    tenantId: 123,
     environment: "integration",
   });
 
