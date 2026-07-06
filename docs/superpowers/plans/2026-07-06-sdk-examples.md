@@ -300,13 +300,21 @@ Run: `SERVICETITAN_ENVIRONMENT=production node --env-file-if-exists=.env example
 Expected: prints the "Refusing to run" message and exits 1 — this happens before
 `createClientFromEnv()` is even called, so it's safe regardless of what's in `.env`.
 
-- [ ] **Step 4: Run it for real against integration**
+- [ ] **Step 4: Run it for real against integration, if available**
 
 Ensure `.env` has `SERVICETITAN_ENVIRONMENT=integration` (or unset, since that's the
 default), then:
 
 Run: `node --env-file-if-exists=.env examples/create-and-update-tag-type.ts`
 Expected: "Created tag type <id>" followed by "Updated tag type <id>" with the same id, exit
+
+Note: in practice, the available `.env` was configured for `production`, not
+`integration` — bypassing the guard would have created a real, permanent (tag types have no
+delete endpoint) "SDK Example Tag" in a live account. Asked the user, who chose to skip live
+verification for this one example rather than write to production or request separate
+integration credentials. This example is verified by typecheck and the guard check (Step 3)
+only — its happy path (successful create/update) is unverified, same status as the raw-response
+example's happy path in Task 4.
 code 0. If the real API rejects the request body (e.g., a validation error on `color`'s
 format), adjust the example's payload to match what the API actually accepts — this step is
 the real verification.
