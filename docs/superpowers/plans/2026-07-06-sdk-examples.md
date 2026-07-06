@@ -383,10 +383,13 @@ call made.
 - [ ] **Step 4: Verify the error path with an invalid call id**
 
 Run: `SERVICETITAN_EXAMPLE_CALL_ID=1 node --env-file-if-exists=.env examples/download-call-recording.ts`
-Expected: a clean failure surfaced via the `main().catch(...)` handler (e.g. a
-`ServiceTitanApiError` with a 4xx status printed as its message), not a crash or hang — this
-proves the request actually reaches the real telecom recording endpoint and fails
-predictably for an id that doesn't correspond to a real call in this account. Note in the
+Expected: a clean failure surfaced via the `main().catch(...)` handler, not a crash or hang —
+this proves the request actually reaches the real telecom recording endpoint and fails
+predictably for an id that doesn't correspond to a real call in this account. Confirmed
+against the real account: ServiceTitan returns `500 Internal Server Error` (not a 404) for an
+invalid call id here — surfaced cleanly as `ServiceTitanApiError: ServiceTitan API request
+failed: 500 Internal Server Error`, exit code 1. The example doesn't assert a specific status
+(unlike `handle-not-found-error.ts`), so no code change is needed for this. Note in the
 commit/PR description (not in the file itself) that the happy path — an id that really does
 have a recording — hasn't been verified, since no such id is available.
 
