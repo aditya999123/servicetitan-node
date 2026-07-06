@@ -27,10 +27,13 @@ export function createClientFromEnv(): ServiceTitan {
   const clientId = requireEnv("SERVICETITAN_CLIENT_ID");
   const clientSecret = requireEnv("SERVICETITAN_CLIENT_SECRET");
   const appKey = requireEnv("SERVICETITAN_APP_KEY");
+  const tenantId = Number(requireEnv("SERVICETITAN_TENANT_ID"));
 
-  return new ServiceTitan({ clientId, clientSecret, appKey, environment: getEnvironment() });
-}
-
-export function getTenantId(): number {
-  return Number(requireEnv("SERVICETITAN_TENANT_ID"));
+  return new ServiceTitan({
+    clientId,
+    clientSecret,
+    appKey,
+    tenantId,
+    environment: getEnvironment(),
+  });
 }

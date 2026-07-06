@@ -1,11 +1,10 @@
 // Demonstrates the basic read pattern: list employees, then get one individually by id.
-import { createClientFromEnv, getTenantId } from "./_shared.ts";
+import { createClientFromEnv } from "./_shared.ts";
 
 async function main(): Promise<void> {
   const st = createClientFromEnv();
-  const tenantId = getTenantId();
 
-  const list = await st.settings.employees.getList(tenantId, { page: 1, pageSize: 5 });
+  const list = await st.settings.employees.getList({ page: 1, pageSize: 5 });
   console.log(`Found ${list.data.length} employee(s) (showing up to 5):`);
   for (const employee of list.data) {
     console.log(`  ${employee.id}: ${employee.name}`);
@@ -17,7 +16,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const employee = await st.settings.employees.get(tenantId, first.id);
+  const employee = await st.settings.employees.get(first.id);
   console.log(`\nFetched employee ${employee.id} individually: ${employee.name} <${employee.email || "no email on file"}>`);
 }
 

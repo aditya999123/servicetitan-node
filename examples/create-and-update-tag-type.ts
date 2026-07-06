@@ -1,6 +1,6 @@
 // Demonstrates a write pattern: create a resource, then update it.
 // Mutates real data — refuses to run against production unless explicitly allowed.
-import { createClientFromEnv, getEnvironment, getTenantId } from "./_shared.ts";
+import { createClientFromEnv, getEnvironment } from "./_shared.ts";
 
 async function main(): Promise<void> {
   const environment = getEnvironment();
@@ -14,15 +14,14 @@ async function main(): Promise<void> {
   }
 
   const st = createClientFromEnv();
-  const tenantId = getTenantId();
 
-  const created = await st.settings.tagTypes.create(tenantId, {
+  const created = await st.settings.tagTypes.create({
     name: "SDK Example Tag",
     color: "#4287f5",
   });
   console.log(`Created tag type ${created.id}`);
 
-  await st.settings.tagTypes.update(tenantId, created.id, {
+  await st.settings.tagTypes.update(created.id, {
     name: "SDK Example Tag (updated)",
   });
   console.log(`Updated tag type ${created.id}`);

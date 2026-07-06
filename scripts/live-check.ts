@@ -33,9 +33,9 @@ async function main(): Promise<void> {
 
   console.log(`Running live test against the ${environment} environment (tenant ${tenantId})...\n`);
 
-  const st = new ServiceTitan({ clientId, clientSecret, appKey, environment });
+  const st = new ServiceTitan({ clientId, clientSecret, appKey, tenantId, environment });
 
-  const result = await st.settings.employees.getList(tenantId, {
+  const result = await st.settings.employees.getList({
     page: 1,
     pageSize: 1,
     includeTotal: true,
