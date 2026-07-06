@@ -21,9 +21,14 @@ const st = new ServiceTitan({
   environment: "integration", // or "production"
 });
 
-const contact = await st.crm.contacts.get(123, "abc-123");
+// Tenant ID isn't part of the client config above — it's passed as the first argument to
+// every call instead, since one app can serve multiple ServiceTitan tenants. See
+// "Tenant ID" under Authentication below.
+const tenantId = Number(process.env.SERVICETITAN_TENANT_ID);
 
-const employees = await st.settings.employees.getList(123, { page: 1, pageSize: 50 });
+const contact = await st.crm.contacts.get(tenantId, "abc-123");
+
+const employees = await st.settings.employees.getList(tenantId, { page: 1, pageSize: 50 });
 ```
 
 ## Examples
@@ -58,6 +63,15 @@ during a refresh share a single token request instead of firing duplicates. You 
 
 See ServiceTitan's own [Getting Started docs](https://developer.servicetitan.io/docs/getting-started/oauth20)
 for how to register an app and obtain these values.
+
+### Tenant ID
+
+Notably absent from the config above: **tenant ID isn't a client-level setting.** A single
+registered app can serve multiple ServiceTitan tenants (customer accounts), so tenant ID is
+instead the first argument to nearly every method, e.g.
+`st.crm.contacts.get(tenantId, "abc-123")`. You'll find it in the ServiceTitan UI (or wherever
+your integration's tenant list is managed) — it's a numeric id, not something the SDK can
+infer or default.
 
 ## Supported domains
 
