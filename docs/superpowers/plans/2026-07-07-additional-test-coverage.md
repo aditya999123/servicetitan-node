@@ -596,8 +596,8 @@ test("renderApiFile groups methods by tag and includes the standard imports", ()
   assert.match(result, /^\/\/ AUTO-GENERATED/);
   assert.match(result, /import type \{ ServiceTitanClient \} from "\.\.\/\.\.\/client\.ts";/);
   assert.match(result, /export function createWidgetsApi\(client: ServiceTitanClient\) \{/);
-  assert.match(result, /{2}widgets: \{/);
-  assert.match(result, /{2}orders: \{/);
+  assert.match(result, / {4}widgets: \{/);
+  assert.match(result, / {4}orders: \{/);
 });
 
 test("renderServiceTitanFacade wires imports, properties, and constructor assignments", () => {

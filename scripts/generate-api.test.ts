@@ -16,6 +16,7 @@ import {
   type OperationInfo,
   type RawSpec,
 } from "./generate-api.ts";
+import { renderApiFile, renderMethod, renderServiceTitanFacade } from "./generate-api.ts";
 
 test("sanitizeIdentifier strips non-alphanumeric characters", () => {
   assert.equal(sanitizeIdentifier("Calls (Deprecated)"), "CallsDeprecated");
@@ -204,4 +205,233 @@ test("collectOperations throws when an operation has no tag", () => {
   } as unknown as RawSpec;
 
   assert.throws(() => collectOperations(badSpec), /Operation Widgets_GetList has no tag/);
+});
+
+function baseOp(overrides: Partial<OperationInfo> = {}): OperationInfo {
+  return {
+    tag: "widgets",
+    methodName: "get",
+    operationId: "Widgets_Get",
+    httpMethod: "get",
+    pathTemplate: "/tenant/{tenant}/widgets/{id}",
+    pathParams: [
+      { name: "tenant", type: "number" },
+      { name: "id", type: "number" },
+    ],
+    hasQuery: false,
+    queryRequired: false,
+    hasBody: false,
+    isRawResponse: false,
+    ...overrides,
+  };
+}
+
+test("renderMethod emits a plain GET with path params only", () => {
+  const result = renderMethod(baseOp(), "/widgets/v2");
+
+  assert.equal(
+    result,
+    `    async get(id: number): Promise<SuccessResponse<operations["Widgets_Get"]>> {
+      const path = buildPath("/widgets/v2/tenant/{tenant}/widgets/{id}", { tenant: client.tenantId, id });
+      return client.request(path);
+    },`,
+  );
+});
+
+test("renderMethod emits a query-only GET", () => {
+  const op = baseOp({
+    methodName: "getList",
+    operationId: "Widgets_GetList",
+    pathTemplate: "/tenant/{tenant}/widgets",
+    pathParams: [{ name: "tenant", type: "number" }],
+    hasQuery: true,
+  });
+
+  const result = renderMethod(op, "/widgets/v2");
+
+  assert.equal(
+    result,
+    `    async getList(query?: operations["Widgets_GetList"]["parameters"]["query"]): Promise<SuccessResponse<operations["Widgets_GetList"]>> {
+      const path = buildPath("/widgets/v2/tenant/{tenant}/widgets", { tenant: client.tenantId });
+      return client.request(path + buildQueryString(query));
+    },`,
+  );
+});
+
+test("renderMethod makes query required when queryRequired is true", () => {
+  const op = baseOp({
+    methodName: "getList",
+    operationId: "Widgets_GetList",
+    pathTemplate: "/tenant/{tenant}/widgets",
+    pathParams: [{ name: "tenant", type: "number" }],
+    hasQuery: true,
+    queryRequired: true,
+  });
+
+  const result = renderMethod(op, "/widgets/v2");
+
+  assert.match(
+    result,
+    /^ {4}async getList\(query: operations\["Widgets_GetList"\]\["parameters"\]\["query"\]\)/,
+  );
+});
+
+test("renderMethod emits a POST with a JSON body", () => {
+  const op = baseOp({
+    methodName: "create",
+    operationId: "Widgets_Create",
+    httpMethod: "post",
+    pathTemplate: "/tenant/{tenant}/widgets",
+    pathParams: [{ name: "tenant", type: "number" }],
+    hasBody: true,
+  });
+
+  const result = renderMethod(op, "/widgets/v2");
+
+  assert.equal(
+    result,
+    `    async create(body: NonNullable<operations["Widgets_Create"]["requestBody"]>["content"]["application/json"]): Promise<SuccessResponse<operations["Widgets_Create"]>> {
+      const path = buildPath("/widgets/v2/tenant/{tenant}/widgets", { tenant: client.tenantId });
+      return client.request(path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    },`,
+  );
+});
+
+test("renderMethod combines query and body when both are present", () => {
+  const op = baseOp({
+    methodName: "cancel",
+    operationId: "Widgets_Cancel",
+    httpMethod: "patch",
+    pathTemplate: "/tenant/{tenant}/widgets/{id}/cancellation",
+    pathParams: [
+      { name: "tenant", type: "number" },
+      { name: "id", type: "number" },
+    ],
+    hasBody: true,
+    hasQuery: true,
+  });
+
+  const result = renderMethod(op, "/widgets/v2");
+
+  assert.equal(
+    result,
+    `    async cancel(id: number, body: NonNullable<operations["Widgets_Cancel"]["requestBody"]>["content"]["application/json"], query?: operations["Widgets_Cancel"]["parameters"]["query"]): Promise<SuccessResponse<operations["Widgets_Cancel"]>> {
+      const path = buildPath("/widgets/v2/tenant/{tenant}/widgets/{id}/cancellation", { tenant: client.tenantId, id });
+      return client.request(path + buildQueryString(query), {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+    },`,
+  );
+});
+
+test("renderMethod emits a raw-response method with query params", () => {
+  const op = baseOp({
+    methodName: "reviews",
+    operationId: "reviews",
+    pathTemplate: "/tenant/{tenant}/reviews",
+    pathParams: [{ name: "tenant", type: "number" }],
+    hasQuery: true,
+    isRawResponse: true,
+  });
+
+  const result = renderMethod(op, "/marketingreputation/v2");
+
+  assert.equal(
+    result,
+    `    async reviews(query?: operations["reviews"]["parameters"]["query"]): Promise<Response> {
+      return client.requestRaw(buildPath("/marketingreputation/v2/tenant/{tenant}/reviews", { tenant: client.tenantId }) + buildQueryString(query));
+    },`,
+  );
+});
+
+test("renderMethod emits a raw-response method with only path params", () => {
+  const op = baseOp({
+    methodName: "getRecording",
+    operationId: "Calls_GetRecording",
+    pathTemplate: "/tenant/{tenant}/calls/{id}/recording",
+    pathParams: [
+      { name: "tenant", type: "number" },
+      { name: "id", type: "number" },
+    ],
+    isRawResponse: true,
+  });
+
+  const result = renderMethod(op, "/telecom/v2");
+
+  assert.equal(
+    result,
+    `    async getRecording(id: number): Promise<Response> {
+      return client.requestRaw(buildPath("/telecom/v2/tenant/{tenant}/calls/{id}/recording", { tenant: client.tenantId, id }));
+    },`,
+  );
+});
+
+test("renderMethod adds an explicit method option for non-GET requests with no body", () => {
+  const op = baseOp({
+    methodName: "delete",
+    operationId: "Widgets_Delete",
+    httpMethod: "delete",
+  });
+
+  const result = renderMethod(op, "/widgets/v2");
+
+  assert.equal(
+    result,
+    `    async delete(id: number): Promise<SuccessResponse<operations["Widgets_Delete"]>> {
+      const path = buildPath("/widgets/v2/tenant/{tenant}/widgets/{id}", { tenant: client.tenantId, id });
+      return client.request(path, { method: "DELETE" });
+    },`,
+  );
+});
+
+test("renderApiFile groups methods by tag and includes the standard imports", () => {
+  const ops = [
+    baseOp(),
+    baseOp({
+      tag: "orders",
+      methodName: "getList",
+      operationId: "Orders_GetList",
+      pathTemplate: "/tenant/{tenant}/orders",
+      pathParams: [{ name: "tenant", type: "number" }],
+    }),
+  ];
+
+  const result = renderApiFile(ops, "/widgets/v2", "createWidgetsApi");
+
+  assert.match(result, /^\/\/ AUTO-GENERATED/);
+  assert.match(result, /import type \{ ServiceTitanClient \} from "\.\.\/\.\.\/client\.ts";/);
+  assert.match(result, /export function createWidgetsApi\(client: ServiceTitanClient\) \{/);
+  assert.match(result, / {4}widgets: \{/);
+  assert.match(result, / {4}orders: \{/);
+});
+
+test("renderServiceTitanFacade wires imports, properties, and constructor assignments", () => {
+  const domains = [
+    { slug: "crm", functionName: "createCrmApi" },
+    { slug: "customer-interactions", functionName: "createCustomerInteractionsApi" },
+  ];
+
+  const result = renderServiceTitanFacade(domains);
+
+  assert.match(result, /import \{ createCrmApi \} from "\.\/crm\/api\.gen\.ts";/);
+  assert.match(
+    result,
+    /import \{ createCustomerInteractionsApi \} from "\.\/customer-interactions\/api\.gen\.ts";/,
+  );
+  assert.match(result, /readonly crm: ReturnType<typeof createCrmApi>;/);
+  assert.match(
+    result,
+    /readonly customerInteractions: ReturnType<typeof createCustomerInteractionsApi>;/,
+  );
+  assert.match(result, /this\.crm = createCrmApi\(this\.client\);/);
+  assert.match(
+    result,
+    /this\.customerInteractions = createCustomerInteractionsApi\(this\.client\);/,
+  );
 });

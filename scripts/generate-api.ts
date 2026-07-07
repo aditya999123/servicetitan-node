@@ -124,7 +124,7 @@ export function collectOperations(spec: RawSpec): OperationInfo[] {
   return operations;
 }
 
-function renderMethod(op: OperationInfo, pathPrefix: string): string {
+export function renderMethod(op: OperationInfo, pathPrefix: string): string {
   const fullPathTemplate = `${pathPrefix}${op.pathTemplate}`;
   const nonTenantPathParams = op.pathParams.filter((param) => param.name !== "tenant");
   const pathArgs = nonTenantPathParams.map((param) => `${param.name}: ${param.type}`).join(", ");
@@ -187,7 +187,7 @@ function renderMethod(op: OperationInfo, pathPrefix: string): string {
     },`;
 }
 
-function renderApiFile(operations: OperationInfo[], pathPrefix: string, functionName: string): string {
+export function renderApiFile(operations: OperationInfo[], pathPrefix: string, functionName: string): string {
   const byTag = new Map<string, OperationInfo[]>();
   for (const op of operations) {
     const list = byTag.get(op.tag) ?? [];
@@ -214,12 +214,12 @@ ${tagBlocks}
 `;
 }
 
-interface DomainInfo {
+export interface DomainInfo {
   slug: string;
   functionName: string;
 }
 
-function renderServiceTitanFacade(domains: DomainInfo[]): string {
+export function renderServiceTitanFacade(domains: DomainInfo[]): string {
   const imports = domains
     .map((d) => `import { ${d.functionName} } from "./${d.slug}/api.gen.ts";`)
     .join("\n");
