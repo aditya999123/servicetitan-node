@@ -65,3 +65,48 @@ test("st.client shares the same token cache as domain methods", async (t) => {
 
   assert.equal(tokenFetchCount, 1);
 });
+
+test("all 24 domains are wired onto the ServiceTitan instance", () => {
+  const st = new ServiceTitan({
+    clientId: "id",
+    clientSecret: "secret",
+    appKey: "app-key",
+    tenantId: 123,
+    environment: "integration",
+  });
+
+  const domainNames = [
+    "accounting",
+    "crm",
+    "customerInteractions",
+    "dispatch",
+    "equipmentSystems",
+    "findings",
+    "forms",
+    "inventory",
+    "jbce",
+    "jpm",
+    "marketing",
+    "marketingAds",
+    "marketingReputation",
+    "memberships",
+    "payroll",
+    "pricebook",
+    "reporting",
+    "salestech",
+    "schedulingPro",
+    "serviceAgreements",
+    "settings",
+    "taskManagement",
+    "telecom",
+    "timesheets",
+  ] as const;
+
+  assert.equal(domainNames.length, 24);
+
+  for (const name of domainNames) {
+    const domain = (st as unknown as Record<string, unknown>)[name];
+    assert.equal(typeof domain, "object", `${name} should be an object`);
+    assert.notEqual(domain, null, `${name} should not be null`);
+  }
+});

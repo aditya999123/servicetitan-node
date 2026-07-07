@@ -33,3 +33,18 @@ test("buildQueryString serializes array values as repeated keys", () => {
 
   assert.equal(result, "?ids=1&ids=2&ids=3");
 });
+
+test("buildPath percent-encodes special characters in path values", () => {
+  const result = buildPath("/tenant/{tenant}/contacts/{id}", {
+    tenant: 123,
+    id: "abc def/ghi",
+  });
+
+  assert.equal(result, "/tenant/123/contacts/abc%20def%2Fghi");
+});
+
+test("buildQueryString encodes special characters in query values", () => {
+  const result = buildQueryString({ search: "hello world & more" });
+
+  assert.equal(result, "?search=hello+world+%26+more");
+});

@@ -147,3 +147,26 @@ test("requestRaw throws ServiceTitanApiError on a non-2xx response", async (t) =
     },
   );
 });
+
+test("defaults to the production environment when none is specified", async (t) => {
+  const calls: string[] = [];
+  t.mock.method(globalThis, "fetch", async (input: string | URL) => {
+    const url = input.toString();
+    if (url.endsWith("/connect/token")) {
+      return jsonResponse({ access_token: "test-token", expires_in: 900 });
+    }
+    calls.push(url);
+    return jsonResponse({ id: 1 });
+  });
+
+  const client = new ServiceTitanClient({
+    clientId: "id",
+    clientSecret: "secret",
+    appKey: "app-key",
+    tenantId: 123,
+  });
+
+  await client.request("/settings/v2/tenant/123/employees");
+
+  assert.equal(calls[0], "https://api.servicetitan.io/settings/v2/tenant/123/employees");
+});
