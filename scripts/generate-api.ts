@@ -12,7 +12,7 @@ interface RawSpec {
 
 const HTTP_METHODS = ["get", "put", "post", "delete", "patch"] as const;
 
-function extractPathPrefix(serverUrl: string): string {
+export function extractPathPrefix(serverUrl: string): string {
   return new URL(serverUrl).pathname.replace(/\/$/, "");
 }
 
@@ -20,33 +20,33 @@ function lowerFirst(value: string): string {
   return value.charAt(0).toLowerCase() + value.slice(1);
 }
 
-function sanitizeIdentifier(value: string): string {
+export function sanitizeIdentifier(value: string): string {
   return value.replace(/[^a-zA-Z0-9]/g, "");
 }
 
-function actionName(operationId: string): string {
+export function actionName(operationId: string): string {
   const action = operationId.includes("_")
     ? operationId.slice(operationId.indexOf("_") + 1)
     : operationId;
   return lowerFirst(sanitizeIdentifier(action));
 }
 
-function domainSlug(specFileName: string): string {
+export function domainSlug(specFileName: string): string {
   return specFileName.replace(/^tenant-/, "").replace(/(-v\d+)?\.json$/, "");
 }
 
-function pascalCase(slug: string): string {
+export function pascalCase(slug: string): string {
   return slug
     .split("-")
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join("");
 }
 
-function camelCase(slug: string): string {
+export function camelCase(slug: string): string {
   return lowerFirst(pascalCase(slug));
 }
 
-function pathParamNamesInOrder(path: string): string[] {
+export function pathParamNamesInOrder(path: string): string[] {
   return Array.from(path.matchAll(/\{(\w+)\}/g), (match) => match[1]);
 }
 
@@ -285,7 +285,10 @@ async function main(): Promise<void> {
   console.log(`\nTotal: ${totalGenerated} operations across ${specFiles.length} domains.`);
 }
 
-main().catch((error: unknown) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
+  main().catch((error: unknown) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}
