@@ -1,5 +1,9 @@
 # servicetitan-node
 
+[![CI](https://github.com/aditya999123/servicetitan-node/actions/workflows/ci.yml/badge.svg)](https://github.com/aditya999123/servicetitan-node/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/servicetitan-node.svg)](https://www.npmjs.com/package/servicetitan-node)
+[![license](https://img.shields.io/npm/l/servicetitan-node.svg)](https://github.com/aditya999123/servicetitan-node/blob/main/LICENSE)
+
 > **Unofficial.** This is a community-maintained Node.js/TypeScript client for the
 > ServiceTitan API. It is not built, endorsed, or supported by ServiceTitan, Inc.
 
