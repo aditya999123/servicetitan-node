@@ -5,7 +5,7 @@ import type { OperationObject, ParameterObject } from "openapi-typescript";
 const GENERATED_HEADER =
   "// AUTO-GENERATED — do not edit by hand. Run `npm run generate` to regenerate.\n\n";
 
-interface RawSpec {
+export interface RawSpec {
   servers: { url: string }[];
   paths: Record<string, Record<string, OperationObject>>;
 }
@@ -50,12 +50,12 @@ export function pathParamNamesInOrder(path: string): string[] {
   return Array.from(path.matchAll(/\{(\w+)\}/g), (match) => match[1]);
 }
 
-interface PathParam {
+export interface PathParam {
   name: string;
   type: "number" | "string";
 }
 
-function collectPathParams(operation: OperationObject, pathTemplate: string): PathParam[] {
+export function collectPathParams(operation: OperationObject, pathTemplate: string): PathParam[] {
   const names = pathParamNamesInOrder(pathTemplate);
   const parameters = (operation.parameters ?? []) as ParameterObject[];
   return names.map((name) => {
@@ -65,7 +65,7 @@ function collectPathParams(operation: OperationObject, pathTemplate: string): Pa
   });
 }
 
-function needsRawResponse(operation: OperationObject): boolean {
+export function needsRawResponse(operation: OperationObject): boolean {
   const responses = operation.responses ?? {};
   const primary = responses["200"] ?? responses["201"] ?? responses["204"];
   if (!primary || !("content" in primary) || !primary.content) {
@@ -75,7 +75,7 @@ function needsRawResponse(operation: OperationObject): boolean {
   return !(contentTypes.length === 1 && contentTypes[0] === "application/json");
 }
 
-interface OperationInfo {
+export interface OperationInfo {
   tag: string;
   methodName: string;
   operationId: string;
@@ -88,7 +88,7 @@ interface OperationInfo {
   isRawResponse: boolean;
 }
 
-function collectOperations(spec: RawSpec): OperationInfo[] {
+export function collectOperations(spec: RawSpec): OperationInfo[] {
   const operations: OperationInfo[] = [];
 
   for (const [pathTemplate, methods] of Object.entries(spec.paths)) {
